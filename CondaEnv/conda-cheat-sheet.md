@@ -1,0 +1,8 @@
+- cd C:\<path>\Experiments\CondaEnv
+- conda list --prefix ./env
+- conda env list
+- conda env create --file environment.yml --prefix ./env
+- conda env update --prefix ./env --file environment.yml --prune
+- conda env update --prefix ./env --file environment.yml --update-all 
+- conda env update --prefix ./env --file environment.yml --force-reinstall
+- conda env remove --prefix ./env
