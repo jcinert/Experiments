@@ -3,3 +3,4 @@ CondaEnv/env/
 *data/
 *.csv
 BERTopic/*model_v*
+*.pyc
