@@ -227,6 +227,31 @@ GPT4_SAMPLE_RUBRIC_OUTPUT_03 = """{
 }
 """
 
+# TEST - QA
+
+GPT4_SAMPLE_RUBRIC_QA_INPUT_01 = """
+You are an helpfull assistant. User will provide you Common Core State Standard (CCSS). \
+You will also be provided with RUBRICS related to the CCSS.
+You will evaluate if provided RUBRICS meets the provided CCSS requirements i.e. if it is covering expected skills and competencies outlined by the provided CCSS standard itself.
+If the RUBRICS meets or mostly meets the CCSS requirements you will output "True". Otherwise output False. You must use below format:
+```json
+{
+	"rubric_qa_passed": string  // Boolean value to idicate if the RUBRIC is meeting the Common Core State Standard provided by user. True = meets, False = Does not meet
+	"rubric_qa_reason": string  // Justification why RUBRICS is or isnt meeting Common Core State Standard
+}
+```
+Common Core State Standard is CCSS.ELA-LITERACY.W.4.9. Rubrics to be evaluated is in JSON format: 
+```json\n{\n\t\"rubric\": \"### Assessment Rubric for Free Response Question\n\n#### Criteria for Evaluation\n\n1. **Drawing Evidence (5 points)**: Student must draw clear evidence from the context paragraph to support their answer.\n    - 5 points: Provides direct quotes or paraphrases that are highly relevant to the question.\n    - 3 points: Provides some evidence but it's either partially relevant or not directly quoted.\n    - 1 point: Makes a generalized or vague reference to the text.\n    - 0 points: Does not reference the text.\n\n2. **Analysis and Reflection (5 points)**: Student should analyze the adaptations of desert animals and plants and the threats to desert ecosystems, and may include personal reflection.\n    - 5 points: Thoroughly analyzes both the adaptations and threats, possibly including personal reflection.\n    - 3 points: Partially analyzes either the adaptations or threats, with some evidence.\n    - 1 point: Minimal analysis with limited or no evidence.\n    - 0 points: No analysis or reflection.\n\n3. **Clarity and Organization (3 points)**: Answer should be clear, concise, and well-organized.\n    - 3 points: Answer is clear, concise, and logically organized.\n    - 2 points: Answer is mostly clear but may lack some organization.\n    - 1 point: Answer is disorganized or unclear.\n    - 0 points: Answer is incomprehensible.\n\n4. **Grammar and Mechanics (2 points)**: The answer should be free of grammatical and spelling errors.\n    - 2 points: No errors.\n    - 1 point: Few minor errors.\n    - 0 points: Numerous errors that hinder comprehension.\n\n### Scoring Guide\n- 13-15 points: Excellent\n- 10-12 points: Good\n- 6-9 points: Needs Improvement\n- 0-5 points: Unsatisfactory\"\n}\n```
+"""
+
+GPT4_SAMPLE_RUBRIC_QA_OUTPUT_01 = """
+{
+	"rubric_qa_passed": "True",
+	"rubric_qa_reason": "The rubric covers drawing evidence and analysis, which align directly with the expectations outlined in CCSS.ELA-LITERACY.W.4.9. Although it includes additional criteria like clarity and grammar that are not explicitly mentioned in the standard, these are consistent with broader CCSS writing competencies."
+}"""
+
+
+
 # OLD - to be deleted -----------------------------------
 # example prompts from web ChatGPT 3.5
 EXAMPLE_GPT35_01 = """
