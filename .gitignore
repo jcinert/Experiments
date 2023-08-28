@@ -4,3 +4,4 @@ CondaEnv/env/
 *.csv
 BERTopic/*model_v*
 *.pyc
+CommonCoreLearningStandardsAI/transcripts/*
