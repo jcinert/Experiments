@@ -134,7 +134,7 @@ class AIStudent():
 
         chain1 = LLMChain(
             llm=ChatOpenAI(
-                temperature=0.7, 
+                temperature=1, 
                 openai_api_base = self.OPENAI_API_BASE,
                 openai_api_key = self.OPENAI_API_KEY,
                 deployment_id = self.OPENAI_DEPLOYMENT_ID),
@@ -143,16 +143,27 @@ class AIStudent():
             verbose=self.DEBUG
         )
 
-        # DEBUG
-        chain1
-        with no_ssl_verification():
-            response = chain1.predict(standard = "CCSS.ELA-LITERACY.W.4.9", 
-                                      answer_quality = self.answer_quality, 
-                                      fmt_instr_answer = self.format_instruction_answer,
-                                      context="New Zealand is a country located in the southwestern Pacific Ocean. It is made up of two main islands, the North Island and the South Island, as well as many smaller islands. The indigenous people of New Zealand are the Maori, who arrived in the country more than 1,000 years ago. Today, Maori culture is an important part of New Zealand's identity. The country is known for its stunning natural scenery, which includes mountains, beaches, and geothermal features. New Zealand is also home to many unique animals, such as the kiwi bird and the tuatara lizard.", 
-                                      frq="Based on the context provided, what are some unique features of New Zealand? How does the Maori culture contribute to the country's identity? Use evidence from the text to support your answer.",
-                                      rubric="""### Assessment Rubric for Free Response Question\n\n#### Criteria for Evaluation\n\n1. **Drawing Evidence (5 points)**: Student must draw clear evidence from literary or informational texts to support their answer.\n    - 5 points: Provides direct quotes or paraphrases that are highly relevant to the question and are drawn from multiple sources.\n    - 3 points: Provides some evidence but it's either partially relevant or not directly quoted, or is drawn from a single source.\n    - 1 point: Makes a generalized or vague reference to the text, or the evidence provided is not relevant to the question.\n    - 0 points: Does not reference the text.\n\n2. **Analysis and Reflection (5 points)**: Student should analyze the unique features of New Zealand's natural environment and the contribution of indigenous Maori culture to the country's history and identity, and reflect on the implications of this information.\n    - 5 points: Thoroughly analyzes both the natural environment and Maori culture, with evidence to support their analysis, and reflects on the implications of this information.\n    - 3 points: Partially analyzes either the natural environment or Maori culture, with some evidence, and reflects on the implications of this information.\n    - 1 point: Minimal analysis with limited or no evidence, or minimal reflection on the implications of the information.\n    - 0 points: No analysis or reflection.\n\n3. **Clarity and Organization (3 points)**: Answer should be clear, concise, and well-organized.\n    - 3 points: Answer is clear, concise, and logically organized.\n    - 2 points: Answer is mostly clear but may lack some organization.\n    - 1 point: Answer is disorganized or unclear.\n    - 0 points: Answer is incomprehensible.\n\n4. **Grammar and Mechanics (2 points)**: The answer should be free of grammatical and spelling errors.\n    - 2 points: No errors.\n    - 1 point: Few minor errors.\n    - 0 points: Numerous errors that hinder comprehension.\n\n### Scoring Guide\n- 13-15 points: Excellent\n- 10-12 points: Good\n- 6-9 points: Needs Improvement\n- 0-5 points: Unsatisfactory""")
-        print(response)
+        # ------------------------------------------------------------------------------------------------
+        # Overall - generate answer to CCSS assessment
+        # ------------------------------------------------------------------------------------------------
+        # not really needed for now, but can be expanded in future
+        self.answer_chain = SequentialChain(
+            chains=[chain1],
+            input_variables=["standard","answer_quality","context","frq","rubric","fmt_instr_answer"],
+            output_variables=["answer"],
+            verbose=self.DEBUG
+        )
+
+        # # DEBUG
+        # chain1
+        # with no_ssl_verification():
+        #     response = chain1.predict(standard = "CCSS.ELA-LITERACY.W.4.9", 
+        #                               answer_quality = self.answer_quality, 
+        #                               fmt_instr_answer = self.format_instruction_answer,
+        #                               context="New Zealand is a country located in the southwestern Pacific Ocean. It is made up of two main islands, the North Island and the South Island, as well as many smaller islands. The indigenous people of New Zealand are the Maori, who arrived in the country more than 1,000 years ago. Today, Maori culture is an important part of New Zealand's identity. The country is known for its stunning natural scenery, which includes mountains, beaches, and geothermal features. New Zealand is also home to many unique animals, such as the kiwi bird and the tuatara lizard.", 
+        #                               frq="Based on the context provided, what are some unique features of New Zealand? How does the Maori culture contribute to the country's identity? Use evidence from the text to support your answer.",
+        #                               rubric="""### Assessment Rubric for Free Response Question\n\n#### Criteria for Evaluation\n\n1. **Drawing Evidence (5 points)**: Student must draw clear evidence from literary or informational texts to support their answer.\n    - 5 points: Provides direct quotes or paraphrases that are highly relevant to the question and are drawn from multiple sources.\n    - 3 points: Provides some evidence but it's either partially relevant or not directly quoted, or is drawn from a single source.\n    - 1 point: Makes a generalized or vague reference to the text, or the evidence provided is not relevant to the question.\n    - 0 points: Does not reference the text.\n\n2. **Analysis and Reflection (5 points)**: Student should analyze the unique features of New Zealand's natural environment and the contribution of indigenous Maori culture to the country's history and identity, and reflect on the implications of this information.\n    - 5 points: Thoroughly analyzes both the natural environment and Maori culture, with evidence to support their analysis, and reflects on the implications of this information.\n    - 3 points: Partially analyzes either the natural environment or Maori culture, with some evidence, and reflects on the implications of this information.\n    - 1 point: Minimal analysis with limited or no evidence, or minimal reflection on the implications of the information.\n    - 0 points: No analysis or reflection.\n\n3. **Clarity and Organization (3 points)**: Answer should be clear, concise, and well-organized.\n    - 3 points: Answer is clear, concise, and logically organized.\n    - 2 points: Answer is mostly clear but may lack some organization.\n    - 1 point: Answer is disorganized or unclear.\n    - 0 points: Answer is incomprehensible.\n\n4. **Grammar and Mechanics (2 points)**: The answer should be free of grammatical and spelling errors.\n    - 2 points: No errors.\n    - 1 point: Few minor errors.\n    - 0 points: Numerous errors that hinder comprehension.\n\n### Scoring Guide\n- 13-15 points: Excellent\n- 10-12 points: Good\n- 6-9 points: Needs Improvement\n- 0-5 points: Unsatisfactory""")
+        # print(response)
 
 
     def buildFormattingInstructionsAnswer(self):
@@ -184,53 +195,42 @@ class AIStudent():
         else:
             raise ValueError("answer_quality must be 1, 2, 3 or 4")
         
-    # def generate_answer(self):
-    #     """
-    #         Generates assessment of Common Core State Standard. Uses provided topic of interest to generate the assessment.
-    #         Make sure to use set_topic() and set_standard() prior to calling this finction
-    #         Returns:
-    #             context - a paragraph of text based on topic and standard
-    #             free responce question (FRQ) - question related to the context to assess students skills as per provided standard
-    #             rubric - JSON format rubric # TODO fix the format
-    #     """
-    #     if (self.topic == None) or (self.standard == None):
-    #         raise ValueError("Standard and topic must be set first to generate the assessement. Use set_topic() and set_standard().")
+    def generate_answer(self,context,frq,rubric):
+        """
+            Generates assessment of Common Core State Standard. Uses provided topic of interest to generate the assessment.
+            Make sure to use set_topic() and set_standard() prior to calling this finction
+            Returns:
+                context - a paragraph of text based on topic and standard
+                frq - free responce question - question related to the context to assess students skills as per provided standard
+                rubric - evaluation rubric
+        """
+        if (self.standard == None):
+            raise ValueError("Standard must be set first to generate the assessement. Use set_standard().")
 
-    #     with no_ssl_verification():
-    #         answer = self.assessment_chain({"standard":self.standard, 
-    #                                 "topic":self.topic, 
-    #                                 "fmt_instr_frq":self.format_instruction_frq,
-    #                                 "fmt_instr_rubric":self.format_instruction_rubric, 
-    #                                 "fmt_instr_frq_qa":self.format_instruction_frq_qa,
-    #                                 "fmt_instr_rubric_qa":self.format_instruction_rubric_qa, 
-    #                                 "EXAMPLE_FRQ_01":self.EXAMPLE_FRQ_01, 
-    #                                 "EXAMPLE_FRQ_02":self.EXAMPLE_FRQ_02,
-    #                                 "EXAMPLE_RUBRIC_01":self.EXAMPLE_RUBRIC_01, 
-    #                                 "EXAMPLE_RUBRIC_02":self.EXAMPLE_RUBRIC_02})
+        with no_ssl_verification():
+            answer_json = self.answer_chain({"standard":self.standard,
+                                        "answer_quality":self.answer_quality,
+                                        "context":context,
+                                        "frq":frq,
+                                        "rubric":rubric,
+                                        "fmt_instr_answer":self.format_instruction_answer})
         
-    #     # saves full answer to /transcripts folder
-    #     if self.DEBUG:
-    #         now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+        # saves full answer to /transcripts folder
+        if self.DEBUG:
+            now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 
-    #         file_name = f"{DEBUG_FILE_PATH}output_{self.standard}_{now}.json"
-    #         with open(file_name, "w") as file:
-    #             json.dump(answer, file)
+            file_name = f"{DEBUG_FILE_PATH}Answer_{self.standard}_{now}.json"
+            with open(file_name, "w") as file:
+                json.dump(answer_json, file)
 
-    #     # parse the response - TODO error handling
-    #     context, frq, rubric, frq_qa, rubric_qa = self.parse_output(answer)
 
-    #     context_out, frq_out = self.qa_frq(context, frq, frq_qa)
-    #     rubric_out = self.qa_rubric(rubric, rubric_qa)
-
-    #     return context_out, frq_out, rubric_out
+        # parse the response - TODO error handling
+        answer = self.parse_output(answer_json)
+        return answer
     
-    # def parse_output(self,answer:dict):
-    #     """
-    #         returns subset of fields provided by LangChain
-    #     """
-    #     context = self.output_parser_frq.parse(answer['reasoning_context_frq'])['context']
-    #     frq = self.output_parser_frq.parse(answer['reasoning_context_frq'])['frq']
-    #     rubric = self.parse_rubric(answer['rubric'])
-    #     frq_qa = self.output_parser_frq_qa.parse(answer['frq_qa'])
-    #     rubric_qa = self.output_parser_rubric_qa.parse(answer['rubics_qa'])
-    #     return context, frq, rubric, frq_qa, rubric_qa
+    def parse_output(self,answer_json:dict):
+        """
+            returns subset of fields provided by LangChain
+        """
+        answer = self.output_parser_answer.parse(answer_json['answer'])['answer']
+        return answer

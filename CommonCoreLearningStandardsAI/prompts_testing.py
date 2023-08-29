@@ -322,95 +322,102 @@ Rubrics: : "### Assessment Rubric for Free Response Question
 	"Answer": "New Zealand has some cool things that make it special. The place has awesome nature like 'mountains, beaches, and geothermal features.' I think that means stuff like hot springs. It also has cool animals like the kiwi bird and tuatara lizard. These animals are only in New Zealand!\n\nThe Maori people are also important there. They came 'more than 1,000 years ago' and their culture is a big part of New Zealand now. So they help make New Zealand special with their own ways and traditions.\n\nSo, New Zealand has pretty nature, unique animals, and the Maori people make it even more special. It's a pretty interesting place to know about!"
 }
 
-# unformatted
-# Answer - EXCELLENT
+# AI Teacher prompts - GPT 4
+# SET 1
+# system
 """
-Student's Grade Level for the Assessment
-The standard is CCSS.ELA-LITERACY.W.4.9, which suggests that the student grade level is 4th grade.
+You are a teacher evaluating students answer to the Common Core State Standard assessment. \
+The assessment consists of: context, free response question (FRQ) and rubric. \
+You need to understand the CONTEXT, FRQ and RUBRIC. \
+You need to evaluate the ANSWER using the RUBRIC \
+Work in this order: 
+1. Evaluate ANSWER using the RUBRIC. Evaluate the ANSWER by each RUBRIC section.
+2. Ensure the ANSWER is related to FRQ and CONTEXT as expected by RUBRIC
+3. Output what is the written evaluation feedback to student. Include what was good and what needs an improvement. Write in a posive helpful tone.
+4. Output total achieved score
+5. Output maximum possible score
 
-How a 4th-Grade Student Would Answer
-A 4th-grade student would aim for clarity and simplicity in their writing. They would not use overly complex sentences or vocabulary. However, they would also aim for a thorough answer to achieve an excellent score, making sure to directly quote or paraphrase evidence from the text, analyze the unique features of New Zealand, and reflect on the Maori culture's role in the country's identity.
+The output should be a markdown code snippet formatted in the following schema, including the leading and trailing "```json" and "```":
 
-Free Response Question Answer
-New Zealand is a super cool place that has lots of things that make it special! First, it's in the southwestern Pacific Ocean and it's not just one island but made of two main islands called the North Island and the South Island. That's like double the fun! And there are also "many smaller islands" too. You can see "mountains, beaches, and geothermal features" which are things like hot springs and geysers.
+```json
+{
+	"Written_eval": string  // Written evaluation feedback to student
+    "Score": int // Score achieved by student
+    "Score_max" : int // Maximum score possible for this assessment
+}
+```
+"""
+"""
+Context: New Zealand is a country located in the southwestern Pacific Ocean. It is made up of two main islands, the North Island and the South Island, as well as many smaller islands. The indigenous people of New Zealand are the Maori, who arrived in the country more than 1,000 years ago. Today, Maori culture is an important part of New Zealand's identity. The country is known for its stunning natural scenery, which includes mountains, beaches, and geothermal features. New Zealand is also home to many unique animals, such as the kiwi bird and the tuatara lizard.
+----------------------------------------------
+Free responce queistion (FRQ): Based on the context provided, what are some unique features of New Zealand? How does the Maori culture contribute to the country's identity? Use evidence from the text to support your answer.
+----------------------------------------------
+Rubric: : "### Assessment Rubric for Free Response Question
 
-Also, New Zealand is home to "unique animals," like the kiwi bird and the tuatara lizard. You won't find these animals anywhere else in the world! So, it's not just the land but the animals that make New Zealand special.
+#### Criteria for Evaluation
 
-But what's really awesome is that it's not just the land or animals that make New Zealand unique; it's the people and their culture. The Maori people were the first people in New Zealand, and they got there "more than 1,000 years ago." Even today, "Maori culture is an important part of New Zealand's identity." That means they helped shape what New Zealand is like now, and they are a big part of what makes New Zealand, well, New Zealand!
+1. **Drawing Evidence (5 points)**: Student must draw clear evidence from the context paragraph to support their answer.
+    - 5 points: Provides direct quotes or paraphrases that are highly relevant to the question.
+    - 3 points: Provides some evidence but it's either partially relevant or not directly quoted.
+    - 1 point: Makes a generalized or vague reference to the text.
+    - 0 points: Does not reference the text.
 
-So, to sum it up, New Zealand is special because of its beautiful nature like mountains and beaches, its unique animals like kiwi birds, and because of the Maori culture that has been there for a really long time and is still important today.
+2. **Analysis and Reflection (5 points)**: Student should analyze the unique features of New Zealand and how Maori culture contributes to the country's identity.
+    - 5 points: Thoroughly analyzes both the unique features and the contribution of Maori culture, possibly including personal reflection.
+    - 3 points: Partially analyzes either the unique features or the contribution of Maori culture, with some evidence.
+    - 1 point: Minimal analysis with limited or no evidence.
+    - 0 points: No analysis or reflection.
 
-Assessment Rubric Evaluation
-Drawing Evidence (5 points): The answer includes both direct quotes and paraphrases like "mountains, beaches, and geothermal features," "unique animals," and "more than 1,000 years ago," which are highly relevant to the question.
+3. **Clarity and Organization (3 points)**: Answer should be clear, concise, and well-organized.
+    - 3 points: Answer is clear, concise, and logically organized.
+    - 2 points: Answer is mostly clear but may lack some organization.
+    - 1 point: Answer is disorganized or unclear.
+    - 0 points: Answer is incomprehensible.
 
-Analysis and Reflection (5 points): The answer thoroughly discusses the unique features of New Zealand and how the Maori culture contributes to the country's identity, even including some personal reflections like "That's like double the fun!" and "That means they helped shape what New Zealand is like now."
+4. **Grammar and Mechanics (2 points)**: The answer should be free of grammatical and spelling errors.
+    - 2 points: No errors.
+    - 1 point: Few minor errors.
+    - 0 points: Numerous errors that hinder comprehension.
 
-Clarity and Organization (3 points): The answer is clearly and logically organized, making it easy to follow.
+### Scoring Guide
+- 13-15 points: Excellent
+- 10-12 points: Good
+- 6-9 points: Needs Improvement
+- 0-5 points: Unsatisfactory
+"""
 
-Grammar and Mechanics (2 points): The answer is free of grammatical and spelling errors.
+# Answer - EXCELLENT
+{
+	"Answer": "New Zealand is an amazing place with lots of special things. First, it has really 'stunning natural scenery.' That means it has cool mountains and pretty beaches. You can even see things that come out of the ground like hot springs! Another thing that's special are the animals. New Zealand has 'kiwi bird and the tuatara lizard,' which are animals you can't find anywhere else. That's super cool!\n\nThe Maori people are a big part of what makes New Zealand special. They 'arrived in the country more than 1,000 years ago.' And now, 'Maori culture is an important part of New Zealand's identity.' That means they help make the country what it is, like how they celebrate and what they believe in.\n\nSo, to sum it up, New Zealand is unique because of its beautiful nature, special animals, and the Maori culture. All these things make New Zealand a place like no other!"
+}
 
-Total Points: 15 (Excellent)"""
-
+# Eval - EXCELLENT
+{
+	"Written_eval": "Great job on your assessment! You've done an excellent job drawing evidence from the text to support your statements, which were both clear and logically organized. While you've touched on both the unique features of New Zealand and how the Maori culture contributes to its identity, you could aim to deepen your analysis in the future. This will add richness to your answers and make them even more engaging. Keep up the good work!",
+	"Score": 14,
+	"Score_max": 15
+}
 
 # Answer - Good
-"""Student's Grade Level for the Assessment
-The standard is CCSS.ELA-LITERACY.W.4.9, which indicates that I should pretend to be a 4th-grade student.
+{
+	"Answer": "New Zealand has some cool things that make it special. The place has awesome nature like 'mountains, beaches, and geothermal features.' I think that means stuff like hot springs. It also has cool animals like the kiwi bird and tuatara lizard. These animals are only in New Zealand!\n\nThe Maori people are also important there. They came 'more than 1,000 years ago' and their culture is a big part of New Zealand now. So they help make New Zealand special with their own ways and traditions.\n\nSo, New Zealand has pretty nature, unique animals, and the Maori people make it even more special. It's a pretty interesting place to know about!"
+}
 
-How a 4th-Grade Student Would Answer
-A 4th-grade student aiming for a "Good" score would likely provide some direct evidence from the text to support their points but may not cover every aspect in detail. The analysis might be more straightforward, and there may be fewer layers of complexity in the answer. The answer will likely be clear but may not be as tightly organized as one striving for an "Excellent" score.
+# Eval - Good
+{
+	"Written_eval": "Well done on your assessment! You did an excellent job drawing evidence from the provided context to support your statements. Your analysis covers the unique features of New Zealand and the Maori culture, although you could aim to deepen this analysis in the future. Your answer is clearly structured and free of grammatical errors. Keep up the fantastic work!",
+	"Score": 14,
+	"Score_max": 15
+}
 
-Free Response Question Answer
-New Zealand is a neat place that has a lot of special things. First, it's in the southwestern Pacific Ocean and is made of "two main islands, the North Island and the South Island," and also "many smaller islands." There are "mountains, beaches, and geothermal features" in New Zealand. That's really cool!
+# Answer - my mix poor
+{
+	"Answer": "New Zealand is an amazing place.  it has really nice nature. That means it has nice mountains and nice baches. You can even see nice things! Animals are nicer too. New Zaeland has all kinds of animals. That's super cool!\n\nThe Maori live there. They arrived some time ago. they like to celebrate. \n\nSo, to sum it up, New Zealand is beautiful nature, special animals, and the Maori people.!"
+}
 
-New Zealand also has animals you won't find other places. It's the home of "the kiwi bird and the tuatara lizard." I think that makes it unique.
-
-Maori people are very important in New Zealand. They got there "more than 1,000 years ago" and their culture is a "part of New Zealand's identity." That means Maori people and their ways of doing things are special to New Zealand.
-
-So, New Zealand is special for its nature, animals, and Maori culture.
-
-Assessment Rubric Evaluation
-Drawing Evidence (3 points): I used some quotes from the text, like "two main islands, the North Island and the South Island," and "the kiwi bird and the tuatara lizard." But I didn't use as many as I could have.
-
-Analysis and Reflection (3 points): I talked about the unique features like islands and animals and also about how Maori culture is important. I didn't go into a lot of detail, but I did cover both parts of the question.
-
-Clarity and Organization (2 points): My answer is mostly clear, but it jumps from one point to another a little bit.
-
-Grammar and Mechanics (2 points): I think I didn't make any spelling or grammar mistakes.
-
-Total Points: 10 (Good)"""
-
-# Answer - Needs Improvement
-"""Free Response Question Answer
-New Zealand is a cool place. It has two big islands and also tiny islands. There are mountains and beaches there. It's also where the Maori people live. They came a long time ago and are important.
-
-Assessment Rubric Evaluation
-Drawing Evidence (3 points): I mentioned the two main islands and the natural features like mountains and beaches, drawing somewhat from the text but without quoting or paraphrasing directly.
-
-Analysis and Reflection (1 point): I mentioned that the Maori people are important but didn't really explain how they contribute to New Zealand's identity, resulting in minimal analysis.
-
-Clarity and Organization (1 point): The answer is somewhat disorganized, as it jumps from geographical features to indigenous people without clear transitions or explanations.
-
-Grammar and Mechanics (1 point): There is at least one minor error ("It's also where the Maori people live" could be more clearly articulated).
-
-Total Points: 6 (Needs Improvement)"""
-
-# Answer - Unsatisfactory
-"""Student's Grade Level for the Assessment
-Based on the standard, CCSS.ELA-LITERACY.W.4.9, I should pretend to be a 4th-grade student.
-
-How a 4th-Grade Student Would Answer for a "Needs Improvement" Score
-A 4th-grade student aiming for a "Needs Improvement" score might provide minimal or no direct evidence from the text to support their points. The answer would likely lack in-depth analysis and could be disorganized. There may also be some grammatical or spelling errors.
-
-Free Response Question Answer
-New Zealand is a really cool place because it has a lot of stuff. There are mountains and stuff and animals. I think the Maori people are cool and old. They make the country special.
-
-Assessment Rubric Evaluation
-Drawing Evidence (1 point): I didn't use any direct quotes or paraphrases from the text, but I did make a generalized reference by saying there are mountains and animals.
-
-Analysis and Reflection (1 point): I only provided a minimal analysis of the unique features and the contribution of Maori culture, without any evidence or reflection.
-
-Clarity and Organization (1 point): The answer is disorganized, jumping from features to culture without clear transitions.
-
-Grammar and Mechanics (1 point): There are few minor errors, like missing punctuation and the use of informal language ("stuff").
-
-Total Points: 4 (Needs Improvement)"""
+# Eval - my mix
+{
+	"Written_eval": "Thank you for submitting your assessment. It's evident that you find New Zealand to be an interesting and beautiful place. To improve, try to directly reference evidence from the provided text, add more depth to your analysis, and carefully proofread for grammar and spelling. Keep trying, and I'm sure you'll do better next time!",
+	"Score": 3,
+	"Score_max": 15
+}

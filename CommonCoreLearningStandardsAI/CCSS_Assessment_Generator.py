@@ -43,7 +43,7 @@ class AssessmentGenerator():
         Class to create Common Core State Standard assessment consisting of:
             - context paragraph
             - free response question
-            - rubrics to evaluate answer
+            - rubric to evaluate answer
         Usage: set topic and standard first, then call generate_assessment()
     """
     def __init__(self, topic=None, standard=None, debug=False):
@@ -161,7 +161,7 @@ class AssessmentGenerator():
         # print(response)
 
         # ------------------------------------------------------------------------------------------------
-        # Chain 2 - generate rubrics
+        # Chain 2 - generate rubric
         # ------------------------------------------------------------------------------------------------
 
         # build expected output schema (JSON)
@@ -286,12 +286,12 @@ class AssessmentGenerator():
 
         system_message = """
         You are an helpful assistant. User will provide you Common Core State Standard (CCSS).\
-        You will also be provided with RUBRICS related to the CCSS.
-        You will evaluate if provided RUBRICS alignes CCSS requirements, i.e. if it allignes with skills and competencies outlined by the provided CCSS standard itself.
-        If the RUBRICS meets or mostly meets the CCSS requirements you will output "True". Otherwise output "False". 
+        You will also be provided with RUBRIC related to the CCSS.
+        You will evaluate if provided RUBRIC alignes CCSS requirements, i.e. if it allignes with skills and competencies outlined by the provided CCSS standard itself.
+        If the RUBRIC meets or mostly meets the CCSS requirements you will output "True". Otherwise output "False". 
         In case you respond "False" also provide:
         1. Justification what is missing or incorrect.
-        2. Adjusted Rubrics, that will be based on the existing, but enhanced to align better to the provided CCSS.
+        2. Adjusted Rubric, that will be based on the existing, but enhanced to align better to the provided CCSS.
         {fmt_instr_rubric_qa}
         """
 
@@ -303,7 +303,7 @@ class AssessmentGenerator():
 
         system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
 
-        CCSS_RUBRIC_QA = """Common Core State Standard is {standard}. Rubrics to be evaluated is in JSON format: 
+        CCSS_RUBRIC_QA = """Common Core State Standard is {standard}. Rubric to be evaluated is in JSON format: 
         {rubric}."""
 
         # Make HumanMessagePromptTemplate
@@ -319,14 +319,14 @@ class AssessmentGenerator():
                 openai_api_key = self.OPENAI_API_KEY,
                 deployment_id = self.OPENAI_DEPLOYMENT_ID),
             prompt = chat_prompt,
-            output_key="rubics_qa",
+            output_key="rubric_qa",
             verbose=self.DEBUG
         )
 
         self.assessment_chain = SequentialChain(
             chains=[chain1, chain2, chain3, chain4],
             input_variables=["standard","topic","fmt_instr_rubric","fmt_instr_frq","fmt_instr_frq_qa","fmt_instr_rubric_qa","EXAMPLE_FRQ_01","EXAMPLE_FRQ_02","EXAMPLE_RUBRIC_01","EXAMPLE_RUBRIC_02"],
-            output_variables=["rubric","reasoning_context_frq","frq_qa","rubics_qa"],
+            output_variables=["rubric","reasoning_context_frq","frq_qa","rubric_qa"],
             verbose=self.DEBUG
         )
 
@@ -394,9 +394,9 @@ class AssessmentGenerator():
         rubric_qa_json = ResponseSchema(name="rubric_qa_passed",
                                     description="Boolean value to idicate if the RUBRIC is meeting the Common Core State Standard provided by user. True = meets, False = Does not meet")
         rubric_qa_reason_json = ResponseSchema(name="rubric_qa_reason",
-                                    description="Justification why RUBRICS isnt meeting Common Core State Standard. If the Rubric is meeting CCSS provide value N/A")
+                                    description="Justification why RUBRIC isnt meeting Common Core State Standard. If the Rubric is meeting CCSS provide value N/A")
         rubric_qa_new_json = ResponseSchema(name="rubric_qa_new",
-                                    description="New regenerated Rubrics meeting Common Core State Standard. If the original Rubric is meeting CCSS provide value N/A")
+                                    description="New regenerated Rubric meeting Common Core State Standard. If the original Rubric is meeting CCSS provide value N/A")
 
         response_schemas = [rubric_qa_json,rubric_qa_reason_json,rubric_qa_new_json]
         output_parser_rubric_qa = StructuredOutputParser.from_response_schemas(response_schemas)
@@ -463,7 +463,7 @@ class AssessmentGenerator():
         frq = self.output_parser_frq.parse(answer['reasoning_context_frq'])['frq']
         rubric = self.parse_rubric(answer['rubric'])
         frq_qa = self.output_parser_frq_qa.parse(answer['frq_qa'])
-        rubric_qa = self.output_parser_rubric_qa.parse(answer['rubics_qa'])
+        rubric_qa = self.output_parser_rubric_qa.parse(answer['rubric_qa'])
         return context, frq, rubric, frq_qa, rubric_qa
     
     def parse_rubric(self, rubric_json):
