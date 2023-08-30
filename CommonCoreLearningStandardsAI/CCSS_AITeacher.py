@@ -97,8 +97,8 @@ class AITeacher():
         1. Evaluate ANSWER using the RUBRIC. Evaluate the ANSWER by each RUBRIC section.
         2. Ensure the ANSWER is related to FRQ and CONTEXT as expected by RUBRIC
         3. Output what is the written evaluation feedback to student. Include what was good and what needs an improvement. Write in a posive helpful tone.
-        4. Output total achieved score
-        5. Output maximum possible score
+        4. Output total achieved score. only output a single integer number
+        5. Output maximum possible score. The total score is sometimes mentioned below the rubric table or you can calculate it summing up maximum points from each section.
 
         {fmt_instr_eval}
         """
@@ -186,7 +186,7 @@ class AITeacher():
                                         "rubric":rubric,
                                         "fmt_instr_eval":self.format_instruction_eval})
         
-        print(eval_json)
+        # print(eval_json)
         # saves full answer to /transcripts folder
         if self.DEBUG:
             now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')

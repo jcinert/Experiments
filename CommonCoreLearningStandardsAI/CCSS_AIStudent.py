@@ -109,7 +109,7 @@ class AIStudent():
         Work in this order: 
         1. Define what grade student you should pretend be to based on the standard. 
         2. Understand how a student of this grade would answer. Remember student grade will impact complexity and lenght of the answer, amogh other aspects of your answer.
-        3. You must answer in a way a student of this grade would to achieve {answer_quality} score. Review the Rubrics to plan the answer.
+        3. You must answer in a way a student of this grade would to achieve {answer_quality}. Review the Rubrics to plan the answer. You should reduce the quality of the answer to meet the expected score.
         4. Answer to FRQ using the CONTEXT as instructed. The Answer must not include any evaluation of itself.
 
         {fmt_instr_answer}
@@ -185,13 +185,13 @@ class AIStudent():
     
     def set_answer_quality(self, answer_quality):
         if answer_quality == 1:
-            self.answer_quality = "1 - Exceeding Standards (Excellent)"
+            self.answer_quality = "Rating: Exceeding Standards (Excellent) Score: maximum points"
         elif answer_quality == 2:
-            self.answer_quality = "2 - Meeting Standards"
+            self.answer_quality = "Rating: Meeting Standards Score: less than maximum, but close points"
         elif answer_quality == 3:
-            self.answer_quality = "3 - Approaching Standards (Progressing)"
+            self.answer_quality = "Rating: Approaching Standards (Progressing) Score: slightly above half of the maximum points"
         elif answer_quality == 4:
-            self.answer_quality = "4 - Not Meeting Standards (Needs Improvement)"
+            self.answer_quality = "Rating: Not Meeting Standards (Needs Improvement) Score: below half of the maximum points"
         else:
             raise ValueError("answer_quality must be 1, 2, 3 or 4")
         
@@ -232,5 +232,6 @@ class AIStudent():
         """
             returns subset of fields provided by LangChain
         """
+        # print(answer_json['answer'])
         answer = self.output_parser_answer.parse(answer_json['answer'])['answer']
         return answer

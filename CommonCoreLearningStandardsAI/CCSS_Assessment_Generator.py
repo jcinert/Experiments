@@ -77,6 +77,8 @@ class AssessmentGenerator():
     def load_prompt_examples(self):
         self.EXAMPLE_RUBRIC_01 = prompt_examples.EXAMPLE_RUBRIC_01
         self.EXAMPLE_RUBRIC_02 = prompt_examples.EXAMPLE_RUBRIC_02
+        self.EXAMPLE_RUBRIC_03 = prompt_examples.EXAMPLE_RUBRIC_03
+        self.EXAMPLE_RUBRIC_04 = prompt_examples.EXAMPLE_RUBRIC_04
         self.EXAMPLE_FRQ_01 = prompt_examples.EXAMPLE_FRQ_01
         self.EXAMPLE_FRQ_02 = prompt_examples.EXAMPLE_FRQ_02
     
@@ -165,28 +167,30 @@ class AssessmentGenerator():
         # ------------------------------------------------------------------------------------------------
 
         # build expected output schema (JSON)
-        self.buildFormattingInstructionsRubric()
-        # DEBUG
-        if self.DEBUG:
-            print(self.format_instruction_rubric)      
+        # self.buildFormattingInstructionsRubric()
+        # # DEBUG
+        # if self.DEBUG:
+        #     print(self.format_instruction_rubric)      
 
         # to avoid Lanchain considering JSON definition as variable
-        fmt_instr_rubric_var = "{fmt_instr_rubric}"
-        EXAMPLE_RUBRIC_01_var = "{EXAMPLE_RUBRIC_01}"
-        EXAMPLE_RUBRIC_02_var = "{EXAMPLE_RUBRIC_02}"
+        # fmt_instr_rubric_var = "{fmt_instr_rubric}"
+        # EXAMPLE_RUBRIC_01_var = "{EXAMPLE_RUBRIC_01}"
+        # EXAMPLE_RUBRIC_02_var = "{EXAMPLE_RUBRIC_02}"
 
-        system_message = f"""
+        system_message = """
         You are an helpful assistant. User will provide you Common Core State Standard. \
-        You will also be provided with CONTEXT and FREE RESPONSE QUESTION.
-        You will output a RUBRIC for this assesment task as expected by the Common Core State Standard definition provided by user.
-        {fmt_instr_rubric_var}
-
+        You will output a RUBRIC for an assessment task as expected by the Common Core State Standard provided by user.
+        
+        {fmt_instr_rubric}
+        
         Here are EXAMPLES of good answer:
         #### EXAMPLE 1
-        {EXAMPLE_RUBRIC_01_var}
+        {EXAMPLE_RUBRIC_01}
         #### EXAMPLE 2
-        {EXAMPLE_RUBRIC_02_var}
+        {EXAMPLE_RUBRIC_02}
         """
+
+        self.format_instruction_rubric = "Output only the generated rubric in markdown string snippet format."
 
         # Make SystemMessagePromptTemplate
         prompt=PromptTemplate(
@@ -197,7 +201,7 @@ class AssessmentGenerator():
         system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
 
         CCSS_RUBRIC = """Common Core State Standard is {standard}. Take into consideration the definition of this standard provided below in step-1.
-        CONTEXT and FREE RESPONSE QUESTION are also included in following JSON: 
+        You can consider the context and free response question (frq), but it is preferable for the generated rubric to be generic, not reflecting the topic of the context and frq.
         {reasoning_context_frq}."""
 
         # Make HumanMessagePromptTemplate
@@ -303,7 +307,7 @@ class AssessmentGenerator():
 
         system_message_prompt = SystemMessagePromptTemplate(prompt=prompt)
 
-        CCSS_RUBRIC_QA = """Common Core State Standard is {standard}. Rubric to be evaluated is in JSON format: 
+        CCSS_RUBRIC_QA = """Common Core State Standard is {standard}. Rubric to be evaluated is in markdown format: 
         {rubric}."""
 
         # Make HumanMessagePromptTemplate
@@ -354,7 +358,7 @@ class AssessmentGenerator():
 
     def buildFormattingInstructionsRubric(self):
         """
-            Builds output formatting instruction for chain 2
+            Builds output formatting instruction for chain 2 - NOT USED 
         """
         rubric_json = ResponseSchema(name="rubric",
                                 description="Rubric for this assesment task as expected by the Common Core State Standard definition provided by user")
@@ -396,11 +400,10 @@ class AssessmentGenerator():
         rubric_qa_reason_json = ResponseSchema(name="rubric_qa_reason",
                                     description="Justification why RUBRIC isnt meeting Common Core State Standard. If the Rubric is meeting CCSS provide value N/A")
         rubric_qa_new_json = ResponseSchema(name="rubric_qa_new",
-                                    description="New regenerated Rubric meeting Common Core State Standard. If the original Rubric is meeting CCSS provide value N/A")
+                                    description="New regenerated Rubric in markdown snippet format. If the original Rubric is meeting CCSS provide value N/A")
 
         response_schemas = [rubric_qa_json,rubric_qa_reason_json,rubric_qa_new_json]
         output_parser_rubric_qa = StructuredOutputParser.from_response_schemas(response_schemas)
-        fmt_instr_rubric_qa = output_parser_rubric_qa.get_format_instructions()
 
         self.format_instruction_rubric_qa = output_parser_rubric_qa.get_format_instructions()
         self.output_parser_rubric_qa = output_parser_rubric_qa
@@ -410,11 +413,7 @@ class AssessmentGenerator():
     
     def set_topic(self, topic):
         self.topic = topic
-        
-    def build_a_prompt_for_xxx(self):
-        return """xxx
-                """
-        
+                
     def generate_assessment(self):
         """
             Generates assessment of Common Core State Standard. Uses provided topic of interest to generate the assessment.
@@ -422,7 +421,7 @@ class AssessmentGenerator():
             Returns:
                 context - a paragraph of text based on topic and standard
                 free responce question (FRQ) - question related to the context to assess students skills as per provided standard
-                rubric - JSON format rubric # TODO fix the format
+                rubric - rubric in markdown format (str)
         """
         if (self.topic == None) or (self.standard == None):
             raise ValueError("Standard and topic must be set first to generate the assessement. Use set_topic() and set_standard().")
@@ -436,8 +435,8 @@ class AssessmentGenerator():
                                     "fmt_instr_rubric_qa":self.format_instruction_rubric_qa, 
                                     "EXAMPLE_FRQ_01":self.EXAMPLE_FRQ_01, 
                                     "EXAMPLE_FRQ_02":self.EXAMPLE_FRQ_02,
-                                    "EXAMPLE_RUBRIC_01":self.EXAMPLE_RUBRIC_01, 
-                                    "EXAMPLE_RUBRIC_02":self.EXAMPLE_RUBRIC_02})
+                                    "EXAMPLE_RUBRIC_01":self.EXAMPLE_RUBRIC_03, 
+                                    "EXAMPLE_RUBRIC_02":self.EXAMPLE_RUBRIC_04})
         
         # saves full answer to /transcripts folder
         if self.DEBUG:
@@ -466,11 +465,12 @@ class AssessmentGenerator():
         rubric_qa = self.output_parser_rubric_qa.parse(answer['rubric_qa'])
         return context, frq, rubric, frq_qa, rubric_qa
     
-    def parse_rubric(self, rubric_json):
+    def parse_rubric(self, rubric_md):
         """
             temporary solution to parse the rubric. there is an error in LangChain parser
         """
-        return rubric_json[22:-7]
+        # return rubric_json[22:-7]
+        return rubric_md
     
     def qa_frq(self, context, frq, frq_qa):
         """
