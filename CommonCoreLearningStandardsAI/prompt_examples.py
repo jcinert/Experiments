@@ -172,3 +172,54 @@ Assistant answer:
 - **1-3 Points: Needs Improvement**
   - Does not meet the expectations for effective narrative writing at the 6th-grade level.
 """
+
+QA_FRQ_EXAMPLE_01 = """
+User inputs are in following JSON:
+{
+	"standard": "CCSS.ELA-LITERACY.W.4.9",
+	"topic": "Basketball",
+	"context": "Basketball is a game that is played with a ball and two hoops. It is a popular sport around the world and can be played indoors or outdoors. The game is usually played with two teams of five players each, who try to score points by throwing the ball into the opposing team's hoop. The team with the most points at the end of the game wins. Basketball players need to be quick, agile, and have good hand-eye coordination. They also need to be able to work well with their teammates and have good sportsmanship. Some of the most famous basketball players include Michael Jordan, LeBron James, and Kobe Bryant.",
+	"frq": "What are some of the key skills and qualities that basketball players need to have in order to be successful? Provide evidence from the context to support your answer.",
+}
+Assistant answer:
+{
+	"context_qa_passed": "True",
+    "context_qa_reason": "The context is appropriate for a 4th-grade level and provides sufficient information on the topic of basketball for students to extract evidence for answering the FRQ.",
+    "frq_qa_passed": "True",
+	"frq_qa_reason": "The FRQ directly aligns with the CCSS.ELA-LITERACY.W.4.9 standard, as it asks students to draw evidence from the provided text to support their analysis."
+}
+"""
+
+QA_FRQ_EXAMPLE_02 = """
+User inputs are in following JSON:
+{
+	"standard": "CCSS.ELA-LITERACY.W.6.3",
+	"topic": "An unexpected encounter at Waterloo Station",
+	"context": "It was a typical morning at Waterloo Station in London, with commuters rushing to catch their trains and travelers dragging their luggage to the platforms. As I was making my way through the crowds, I suddenly felt something bump into me. I turned around to see a man in his mid-thirties, who looked just as surprised as I was. He apologized and explained that he was in a hurry to catch his train to Paris. We struck up a conversation, and I learned that he was a professor of history at a university in Paris. He was in London for a conference, and we discovered that we shared a love for history. As we chatted, I couldn't help but notice the interesting details about his appearance - a small scar above his left eyebrow, a vintage watch on his wrist, and a distinct accent that I couldn't place. Before I knew it, his train arrived, and he had to hurry to catch it. As he disappeared into the crowd, I couldn't help but feel that this unexpected encounter was something special.",
+	"frq": "Write a narrative about the unexpected encounter at Waterloo Station from the perspective of either the protagonist or the history professor. Your narrative should have a beginning, middle, and end. Make sure to use effective narrative techniques, relevant descriptive details, and structure the events in a sequential manner."
+}
+Assistant answer:
+{
+	"context_qa_passed": "True",
+    "context_qa_reason": "The CONTEXT describes an unexpected encounter at Waterloo Station in a detailed and sequential manner, providing ample material for narrative writing, thus meeting the CCSS W.6.3 standard.",
+    "frq_qa_passed": "True",
+	"frq_qa_reason": "The FRQ instructs students to write a narrative using effective techniques, relevant details, and a structured event sequence, which aligns well with the requirements of CCSS W.6.3."
+}
+"""
+
+QA_FRQ_EXAMPLE_03 = """
+User inputs are in following JSON:
+{
+	"standard": "CCSS.ELA-LITERACY.W.4.4",
+	"topic": "New Zealand",
+	"context": "New Zealand, located in the southwestern Pacific Ocean, is a land of stunning natural beauty and diverse wildlife. The country is made up of two main islands, the North Island and the South Island, and several smaller islands. The landscape is characterized by rugged mountains, lush forests, and pristine beaches. New Zealand is home to many unique and endemic species, such as the kiwi bird, the tuatara reptile, and the kakapo parrot. The country has a rich Maori culture, which is evident in its art, language, and traditions. New Zealand is also known for its adventure tourism, with activities such as bungee jumping, skydiving, and white water rafting attracting visitors from around the world.",
+	"frq": "Write a short article about New Zealand. Your text should describe the country's geography, wildlife, culture, and tourism.",
+}
+Assistant answer:
+{
+	"context_qa_passed": "True",
+    "context_qa_reason": "The CONTEXT is well-developed, organized, and appropriate for a fourth-grade audience, which aligns with the requirements of CCSS.ELA-LITERACY.W.4.4.",
+    "frq_qa_passed": "False",
+	"frq_qa_reason": "While the FRQ covers the topics mentioned in the CONTEXT and allows room for development and organization, it does not specify that the writing should be suitable for a fourth-grade audience in terms of development, organization, and style, which is a requirement of CCSS.ELA-LITERACY.W.4.4."
+}
+"""

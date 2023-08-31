@@ -1,6 +1,7 @@
 .env
 CondaEnv/env/
 *data/
+!test_data/
 *.csv
 BERTopic/*model_v*
 *.pyc
