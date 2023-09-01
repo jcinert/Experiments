@@ -52,9 +52,9 @@ def generate_assessment(config:dict, generator: AssessmentGenerator, standard:st
     
     for i in range(config['max_retries_on_error']):
         try:
-            context, frq, rubric = generator.generate_assessment()
             print('─' * 50)
             print(">>> Assessment generation start")
+            context, frq, rubric = generator.generate_assessment()
             print(f"Context: {context}")
             print('─' * 50)
             print(f"Free responce question: {frq}")
@@ -79,9 +79,9 @@ def answer_assessment(config:dict, student: AIStudent, standard, context, frq, r
 
     for i in range(config['max_retries_on_error']):
         try:
-            answer = student.generate_answer(context,frq,rubric)
             print('─' * 50)
             print(">>> Assessment answering start")
+            answer = student.generate_answer(context,frq,rubric)
             print(f"Answer: {answer}")
             print(">>> Assessment answering complete") 
             print('─' * 50)
@@ -100,9 +100,9 @@ def evaluate_assessment(config:dict, teacher: AITeacher, standard, context, frq,
 
     for i in range(config['max_retries_on_error']):
         try:
-            written_eval, score, score_max = teacher.evaluate_answer(standard,context,frq,rubric,answer)
             print('─' * 50)
             print(">>> Assessment evaluation start")
+            written_eval, score, score_max = teacher.evaluate_answer(standard,context,frq,rubric,answer)
             print(f"Score: {score} (out of {score_max})")
             print(f"Evaluation: {written_eval}")
             print(">>> Assessment evaluation complete") 

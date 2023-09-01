@@ -659,3 +659,154 @@ answer_gpt4 = """
 }
 
 """
+
+## Adding rubric to above
+test = """
+You are an helpful assistant. User will provide you Common Core State Standard (CCSS) and a topic. \
+        You will also be provided with CONTEXT paragraph, Free Response Question (FRQ) and RUBRIC.
+        You will evaluate if provided CONTEXT, FRQ and RUBRIC are meeting the CCSS requirements, i.e. if it aligns with skills and competencies outlined by the provided CCSS standard itself.
+
+        Follow these steps to complete the task:
+        1. Understand the provided CCSS definition, skills and competencies it should test
+        2. Understand the expected CONTEXT complexity, length and topic
+        3. Validate if CONTEXT broadly meets the CCSS requirements.
+        4. Validate if FRQ broadly meets the requirements and is relevant to the CONTEXT
+        5. Validate if RUBRIC broadly meets the requirements and can be used to evaluate to FRQ answer
+
+        If the CONTEXT meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field context_qa_passed.
+        If the FRQ meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field frq_qa_passed.
+        If the RUBRIC meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field rubric_qa_passed.
+        In case you respond "False" also provide justification what is missing or is incorrect.
+
+The output should be a markdown code snippet formatted in the following schema, including the leading and trailing "```json" and "```":
+```json
+{
+	"context_qa_passed": string  // Boolean value to indicate if the COTEXT is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+    "context_qa_reason": string  // Justification why COTEXT is or isnt meeting Common Core State Standard
+    "frq_qa_passed": string  // Boolean value to indicate if the FRQ is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+	"frq_qa_reason": string  // Justification why FRQ is or isnt meeting Common Core State Standard
+    "rubric_qa_passed": string  // Boolean value to indicate if the RUBRIC is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+	"rubric_qa_reason": string  // Justification why RUBRIC is or isnt meeting Common Core State Standard
+}
+```
+
+User inputs are in following JSON:
+{
+	"standard": "CCSS.ELA-LITERACY.W.6.3",
+	"topic": "An unexpected encounter at Waterloo Station",
+	"context": "It was a typical morning at Waterloo Station in London, with commuters rushing to catch their trains and travelers dragging their luggage to the platforms. As I was making my way through the crowds, I suddenly felt something bump into me. I turned around to see a man in his mid-thirties, who looked just as surprised as I was. He apologized and explained that he was in a hurry to catch his train to Paris. We struck up a conversation, and I learned that he was a professor of history at a university in Paris. He was in London for a conference, and we discovered that we shared a love for history. As we chatted, I couldn't help but notice the interesting details about his appearance - a small scar above his left eyebrow, a vintage watch on his wrist, and a distinct accent that I couldn't place. Before I knew it, his train arrived, and he had to hurry to catch it. As he disappeared into the crowd, I couldn't help but feel that this unexpected encounter was something special.",
+	"frq": "Write a narrative about the unexpected encounter at Waterloo Station from the perspective of either the protagonist or the history professor. Your narrative should have a beginning, middle, and end. Make sure to use effective narrative techniques, relevant descriptive details, and structure the events in a sequential manner.",
+	"rubric": "# Rubric for Narrative Writing Based on CCSS.ELA-LITERACY.W.6.3\n\n## Criteria: Narrative Techniques\n- **4: Exemplary**\n  - The narrative consistently employs a variety of narrative techniques, such as dialogue, pacing, and description, to develop experiences, events, and/or characters.\n- **3: Proficient**\n  - The narrative mostly employs narrative techniques to develop experiences or events but may lack consistency or variety.\n- **2: Developing**\n  - The narrative sporadically employs narrative techniques, and these are not well integrated or lack variety.\n- **1: Needs Improvement**\n  - The narrative lacks narrative techniques for developing experiences or events.\n\n## Criteria: Relevant Descriptive Details\n- **4: Exemplary**\n  - The narrative is rich with relevant descriptive details that contribute meaningfully to the experiences or events.\n- **3: Proficient**\n  - The narrative contains some relevant descriptive details, but they may not be fully integrated into the experiences or events.\n- **2: Developing**\n  - The narrative includes limited relevant descriptive details, and they do not significantly contribute to the experiences or events.\n- **1: Needs Improvement**\n  - The narrative lacks relevant descriptive details.\n\n## Criteria: Well-structured Event Sequence\n- **4: Exemplary**\n  - Events unfold naturally and logically with a clear beginning, middle, and end. Transitions are smoothly integrated using a variety of transitional words, phrases, and clauses.\n- **3: Proficient**\n  - Events mostly follow a logical sequence with a recognizable beginning, middle, and end. Some transitions may be lacking or repetitive.\n- **2: Developing**\n  - Events do not always follow a logical sequence and transitions between events are not always clear or varied.\n- **1: Needs Improvement**\n  - The narrative lacks a clear event sequence and is hard to follow.\n\n## Overall Score\n- **10-12 Points: Exemplary**\n  - Demonstrates mastery of the narrative form with consistent use of narrative techniques, descriptive details, and well-structured event sequences with varied and appropriate transitions.\n- **7-9 Points: Proficient**\n  - Demonstrates competence in narrative writing but may have minor inconsistencies in technique, details, or structure.\n- **4-6 Points: Developing**\n  - Demonstrates some understanding of narrative writing but lacks consistent application of narrative techniques, details, or structure.\n- **1-3 Points: Needs Improvement**\n  - Does not meet the expectations for effective narrative writing at the 6th-grade level."      
+    }
+"""
+#answer
+
+"""{
+	"context_qa_passed": "true",
+	"context_qa_reason": "The context aligns well with the CCSS standard, offering a setting, characters, and a sequence of events that allow for the use of effective narrative techniques, descriptive details, and clear event sequences.",
+	"frq_qa_passed": "true",
+	"frq_qa_reason": "The FRQ is in line with the CCSS standard, specifically asking for elements of effective narrative writing such as techniques, details, and sequences.",
+	"rubric_qa_passed": "true",
+	"rubric_qa_reason": "The rubric closely aligns with the CCSS standard by offering detailed evaluation criteria that focus on effective narrative techniques, relevant descriptive details, and well-structured event sequences."
+}
+"""
+
+# set 2
+"""
+You are an helpful assistant. User will provide you Common Core State Standard (CCSS) and a topic. \
+        You will also be provided with CONTEXT paragraph, Free Response Question (FRQ) and RUBRIC.
+        You will evaluate if provided CONTEXT, FRQ and RUBRIC are meeting the CCSS requirements, i.e. if it aligns with skills and competencies outlined by the provided CCSS standard itself.
+
+        Follow these steps to complete the task:
+        1. Understand the provided CCSS definition, skills and competencies it should test
+        2. Understand the expected CONTEXT complexity, length and topic
+        3. Validate if CONTEXT broadly meets the CCSS requirements.
+        4. Validate if FRQ broadly meets the requirements and is relevant to the CONTEXT
+        5. Validate if RUBRIC broadly meets the requirements and can be used to evaluate to FRQ answer
+
+        If the CONTEXT meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field context_qa_passed.
+        If the FRQ meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field frq_qa_passed.
+        If the RUBRIC meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field rubric_qa_passed.
+        In case you respond "false" also provide justification what is missing or is incorrect.
+
+The output should be a markdown code snippet formatted in the following schema, including the leading and trailing "```json" and "```":
+```json
+{
+	"context_qa_passed": string  // Boolean value to indicate if the COTEXT is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+    "context_qa_reason": string  // Justification why COTEXT is or isnt meeting Common Core State Standard
+    "frq_qa_passed": string  // Boolean value to indicate if the FRQ is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+	"frq_qa_reason": string  // Justification why FRQ is or isnt meeting Common Core State Standard
+    "rubric_qa_passed": string  // Boolean value to indicate if the RUBRIC is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+	"rubric_qa_reason": string  // Justification why RUBRIC is or isnt meeting Common Core State Standard
+}
+```
+User inputs are in following JSON:
+{
+	"standard": "CCSS.ELA-LITERACY.W.4.9",
+	"topic": "Basketball",
+	"context": "Basketball is a game that is played with a ball and two hoops. It is a popular sport around the world and can be played indoors or outdoors. The game is usually played with two teams of five players each, who try to score points by throwing the ball into the opposing team's hoop. The team with the most points at the end of the game wins. Basketball players need to be quick, agile, and have good hand-eye coordination. They also need to be able to work well with their teammates and have good sportsmanship. Some of the most famous basketball players include Michael Jordan, LeBron James, and Kobe Bryant.",
+	"frq": "What are some of the key skills and qualities that basketball players need to have in order to be successful? Provide evidence from the context to support your answer.",
+	"rubric": "# Rubric for CCSS.ELA-LITERACY.W.4.9 Assessment\n\n## Criteria: Identification of Key Elements\n\n| Level  | Description                                                                                                                                                                                   |\n|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| 4      | The student identifies multiple key elements of basketball as a sport, citing specific evidence from the text for each point.                                                |\n| 3      | The student identifies some key elements of basketball but may lack full depth or specificity in citing evidence from the text.                                                                 |\n| 2      | The student identifies only one key element of basketball and cites minimal evidence from the text.                                                                                            |\n| 1      | The student struggles to identify key elements of basketball as a sport, and provides little to no evidence from the text.                                                     |\n| 0      | The student does not attempt to identify key elements of basketball.                                                                                                                           |\n\n## Criteria: Contribution to Popularity and Values\n\n| Level  | Description                                                                                                                                                                                    |\n|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| 4      | The student identifies multiple ways in which the key elements of basketball contribute to the game's popularity and values such as sportsmanship and fair play, citing specific evidence from the text for each point.                                                                       |\n| 3      | The student identifies some ways in which the key elements of basketball contribute to the game's popularity and values such as sportsmanship and fair play, but may lack full depth or specificity in citing evidence from the text.                                                                                 |\n| 2      | The student identifies only one way in which the key elements of basketball contribute to the game's popularity and values such as sportsmanship and fair play, and cites minimal evidence from the text.                                                                                          |\n| 1      | The student struggles to identify ways in which the key elements of basketball contribute to the game's popularity and values such as sportsmanship and fair play, and provides little to no evidence from the text.                                                                               |\n| 0      | The student does not attempt to identify how the key elements of basketball contribute to the game's popularity and values such as sportsmanship and fair play.                                                                                                                    |\n\n## Criteria: Quality of Analysis or Reflection\n\n| Level  | Description                                                                                                                                                                                   |\n|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| 4      | The student provides a thorough analysis or reflection that is well-supported by evidence from the text, showing a deep understanding of both the key elements of basketball and their contribution to the game's popularity and values such as sportsmanship and fair play.         |\n| 3      | The student provides some analysis or reflection supported by evidence from the text but may lack depth or full understanding of either the key elements of basketball or their contribution to the game's popularity and values such as sportsmanship and fair play.                |\n| 2      | The student provides a basic level of analysis or reflection that is minimally supported by evidence from the text.                                                                              |\n| 1      | The student attempts to analyze or reflect but does not provide evidence from the text to support their ideas.                                                                                   |\n| 0      | The student does not attempt to provide any analysis or reflection on the topic.                                                                                                                |\n\n## Criteria: Writing Conventions\n\n| Level  | Description                                                                                                                                                                                   |\n|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| 4      | The student's writing is clear, well-organized, and free of grammatical errors.                                                                                                                 |\n| 3      | The student's writing is mostly clear and organized, with minor grammatical errors that do not interfere with understanding.                                                                     |\n| 2      | The student's writing shows some disorganization or has several grammatical errors that may interfere with understanding.                                                                        |\n| 1      | The student's writing is disorganized and contains numerous grammatical errors, making it difficult to understand the analysis or reflection.                                                     |\n| 0      | The student does not attempt to write a coherent response.                                                                                                                                     |\n\n## Overall Scoring\n\n- **13-16 points**: The student demonstrates an excellent understanding of the key elements of basketball, their contribution to the game's popularity and values such as sportsmanship and fair play, as well as strong analytical and writing skills.\n- **9-12 points**: The student demonstrates a good understanding of the topic but may have minor gaps in analysis, evidence, or writing quality.\n- **5-8 points**: The student shows a basic understanding but has notable weaknesses in analysis, use of evidence, or writing conventions.\n- **1-4 points**: The student struggles significantly in understanding the topic, analyzing it, or providing evidence from the text.\n- **0 points**: No attempt made to answer the question."
+}
+"""
+
+# answer
+{
+	"context_qa_passed": "true",
+    "context_qa_reason": "The context is suitable for a fourth-grade level, and it provides sufficient information about basketball that can be used to draw evidence for analysis and reflection.",
+	"frq_qa_passed": "true",
+    "frq_qa_reason": "The FRQ is designed to require students to draw evidence from the provided context to support their analysis, which aligns well with CCSS.ELA-LITERACY.W.4.9.",
+	"rubric_qa_passed": "true",
+    "rubric_qa_reason": "The rubric is comprehensive and aligns with CCSS.ELA-LITERACY.W.4.9 by focusing on drawing evidence from the text to support analysis and reflection. It also includes criteria for assessing the quality of analysis and writing conventions."
+}
+
+# set 2 - negative?
+"""
+You are an helpful assistant. User will provide you Common Core State Standard (CCSS) and a topic. \
+        You will also be provided with CONTEXT paragraph, Free Response Question (FRQ) and RUBRIC.
+        You will evaluate if provided CONTEXT, FRQ and RUBRIC are meeting the CCSS requirements, i.e. if it aligns with skills and competencies outlined by the provided CCSS standard itself.
+
+        Follow these steps to complete the task:
+        1. Understand the provided CCSS definition, skills and competencies it should test
+        2. Understand the expected CONTEXT complexity, length and topic
+        3. Validate if CONTEXT broadly meets the CCSS requirements.
+        4. Validate if FRQ broadly meets the requirements and is relevant to the CONTEXT
+        5. Validate if RUBRIC broadly meets the requirements and can be used to evaluate to FRQ answer
+
+        If the CONTEXT meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field context_qa_passed.
+        If the FRQ meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field frq_qa_passed.
+        If the RUBRIC meets or mostly meets the CCSS requirements you will output "true". Otherwise output "false" in field rubric_qa_passed.
+        In case you respond "false" also provide justification what is missing or is incorrect.
+
+The output should be a markdown code snippet formatted in the following schema, including the leading and trailing "```json" and "```":
+```json
+{
+	"context_qa_passed": string  // Boolean value to indicate if the COTEXT is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+    "context_qa_reason": string  // Justification why COTEXT is or isnt meeting Common Core State Standard
+    "frq_qa_passed": string  // Boolean value to indicate if the FRQ is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+	"frq_qa_reason": string  // Justification why FRQ is or isnt meeting Common Core State Standard
+    "rubric_qa_passed": string  // Boolean value to indicate if the RUBRIC is meeting the Common Core State Standard provided by user. true = meets, false = Does not meet
+	"rubric_qa_reason": string  // Justification why RUBRIC is or isnt meeting Common Core State Standard
+}
+```
+User inputs are in following JSON:
+{
+	"standard": "CCSS.ELA-LITERACY.W.4.9",
+	"topic": "Basketball",
+	"context": "Basketball is a game that is played with a ball and two hoops. It is a popular sport around the world and can be played indoors or outdoors. The game is usually played with two teams of five players each, who try to score points by throwing the ball into the opposing team's hoop. The team with the most points at the end of the game wins. Basketball players need to be quick, agile, and have good hand-eye coordination. They also need to be able to work well with their teammates and have good sportsmanship. Some of the most famous basketball players include Michael Jordan, LeBron James, and Kobe Bryant.",
+	"frq": "What are some of the key skills and qualities that basketball players need to have in order to be successful? Provide evidence from the context to support your answer.",
+	"rubric": ""# Rubric for CCSS.ELA-LITERACY.W.4.9 Assessment\n\n## Criteria: Identification of Key Elements\n\n| Level  | Description                                                                                                                                                                                   |\n|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| 4      | The student identifies multiple key elements of basketball                                                 |\n| 3      | The student identifies some key elements of basketball but may lack full depth or specificity |\n| 2      | The student identifies only one key element of basketball                                                                                           |\n| 1      | The student struggles to identify key elements of basketball as a sport.                                                     |\n| 0      | The student does not attempt to identify key elements of basketball.                                                                                                                           |\n\n## Criteria: Writing Conventions\n\n| Level  | Description                                                                                                                                                                                   |\n|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| 4      | The student's writing is clear, well-organized, and free of grammatical errors.                                                                                                                 |\n| 3      | The student's writing is mostly clear and organized, with minor grammatical errors that do not interfere with understanding.                                                                     |\n| 2      | The student's writing shows some disorganization or has several grammatical errors that may interfere with understanding.                                                                        |\n| 1      | The student's writing is disorganized and contains numerous grammatical errors, making it difficult to understand the analysis or reflection.                                                     |\n| 0      | The student does not attempt to write a coherent response.                                                                                                                                     |\n\n## Overall Scoring\n\n-**5-8 points**: The student shows a basic understanding but has notable weaknesses in analysis.\n- **1-4 points**: The student struggles significantly in understanding the topic.\n- **0 points**: No attempt made to answer the question."
+}
+"""
+
+# answer
+"""
+{
+    "context_qa_passed": "true",
+    "context_qa_reason": "The context is appropriate for a 4th-grade audience and offers multiple angles for analysis and reflection. It meets the requirements of the CCSS W.4.9 standard.",
+    "frq_qa_passed": "true",
+    "frq_qa_reason": "The FRQ aligns with the CCSS W.4.9 standard as it asks students to draw evidence from the context to support their analysis and reflection.",
+    "rubric_qa_passed": "false",
+    "rubric_qa_reason": "While the rubric addresses the identification of key elements and writing conventions, it lacks specific criteria for assessing the use of evidence from the text, which is crucial for meeting the CCSS W.4.9 standard."
+}
+"""
