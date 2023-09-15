@@ -1,0 +1,10 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: 
+  local_path: src
+command: >-
+  python train_aml.py
+environment: azureml:docker-image-plus-conda-example:1
+compute: azureml:dlnacmpttarget
+display_name: aml_train_cli_test_1
+experiment_name: aml_train_cli_test1
+description: JC-Train test

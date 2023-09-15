@@ -1,0 +1,35 @@
+# DATA FILES
+folder: 'data'
+raw_price_data: 'raw_price_data.csv'
+raw_fgi_data: 'raw_fgi_data.csv'
+processed_marked_data: 'processed_market_data_v7.csv'
+synt_data: 'synth_market_data_v4.csv'
+train_data: 'synth_market_data_v4.csv'
+forecast: 'forecast.csv'
+# IMPORT
+coins_to_import:
+  - name: 'BTC-USD'
+    import_approach: full # delta / full
+    date_from: '2017-01-01' # use with "import_approach: full"
+  - name: 'ETH-USD'
+    import_approach: full
+    date_from: '2017-01-01'
+# PROCESSING
+coins_to_process:
+  - name: 'BTC-USD'
+    train: 'yes' # yes / no
+    create_tbl: 'yes'
+  - name: 'ETH-USD' # TODO not considered for now
+    train: 'yes' # yes / no
+    create_tbl: 'yes'
+synthetic_data:
+  generate: true
+  # TODO fix
+# MODEL TRAINING
+lstm_parameters: 
+  - coin: 'BTC-USD'
+    expected_accuracy:
+      acc: 0.6286
+  - coin: 'ETH-USD'
+    expected_accuracy:
+      acc: 0.0

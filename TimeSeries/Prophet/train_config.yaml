@@ -1,0 +1,26 @@
+# FBprophet MODEL TRAINING
+fbp_parameters: 
+  - coin: 'BTC-USD'
+    growth: 'linear'
+    changepoint_prior_scale: 10 # recommended interval - log scale [0.001, 0.5], this might overfit
+    seasonality_prior_scale: 0.01
+    holidays_prior_scale: 0.01
+    seasonality_mode: 'multiplicative'
+    changepoint_range: 0.99
+    train_set_size: 2008
+    expected_accuracy:
+      mape: 0.075596901
+      mdape: 0.052336558
+      rsme: 5054.700263
+  - coin: 'ETH-USD'
+    growth: 'linear'
+    changepoint_prior_scale: 0.5 # recommended interval - log scale [0.001, 0.5], this might overfit
+    seasonality_prior_scale: 0.1
+    holidays_prior_scale: 0.01
+    seasonality_mode: 'additive'
+    changepoint_range: 0.99
+    train_set_size: 1330
+    expected_accuracy:
+      mape: 0.099035464
+      mdape: 0.082653296
+      rsme: 409.8950881

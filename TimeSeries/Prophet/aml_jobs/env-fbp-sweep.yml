@@ -1,0 +1,6 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: jc-fbprophet-071-ubuntu1804-py38-cpu
+version: 4
+image: mcr.microsoft.com/azureml/openmpi3.1.2-ubuntu18.04
+conda_file: conda-yamls/fbp-sweep.yml
+description: fbprophet sweep

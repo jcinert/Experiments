@@ -1,0 +1,10 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+code: 
+  local_path: src
+command: >-
+  python fbp_sweep.py
+environment: azureml:jc-fbprophet-071-ubuntu1804-py38-cpu:4
+compute: azureml:jc-lowpriority
+display_name: aml_fbprophet_cli_sweep
+experiment_name: aml_fbprophet_cli_sweep
+description: JC-Sweep test of FBP

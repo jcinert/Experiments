@@ -1,0 +1,5 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: jc-fbprophet-071-ubuntu1804-py38-cpu
+image: mcr.microsoft.com/azureml/openmpi3.1.2-ubuntu18.04
+conda_file: conda-yamls/fbprophet-sample.yml
+description: JC test of fbprophet.

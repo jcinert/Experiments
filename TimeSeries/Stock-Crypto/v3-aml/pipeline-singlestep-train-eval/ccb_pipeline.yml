@@ -1,0 +1,19 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+
+name: ccb_pipeline
+display_name: CCB single step pipeline
+description: Crypto Bot single step/script pipeline to dowload data / train / score models
+version: 0.0.1
+inputs:
+  data_path: 
+    type: uri_folder
+outputs:
+  output_folder:
+    type: uri_folder
+code: ./v3-aml
+environment: azureml:crypto-bot-gpu-env:1
+command: >-
+  python main.py 
+  --data_path ${{inputs.data_path}} 
+  --output_folder ${{outputs.output_folder}}

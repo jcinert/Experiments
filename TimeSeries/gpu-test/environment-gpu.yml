@@ -1,0 +1,15 @@
+name: gpu-env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python
+  - pandas
+  - pip
+  - numpy
+  - scikit-learn
+  - ipykernel
+  - cudatoolkit=11.2
+  - cudnn=8.1.0
+  - pip:
+    - tensorflow-gpu==2.10

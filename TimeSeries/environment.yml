@@ -1,0 +1,28 @@
+name: CryptoBot
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python
+  - pandas
+  - pandas-profiling
+  - pip
+  - plotly
+  - numpy
+  - pathlib
+  - tqdm
+  - ipywidgets
+  - ipykernel
+  - matplotlib
+  - mlflow
+  - ta-lib
+  - cudatoolkit=11.2
+  - cudnn=8.1.0
+  - xgboost
+  - catboost
+  - pip:
+    - yfinance
+    - datetime
+    - sklearn
+    - pyyaml
+    - tensorflow-gpu==2.10

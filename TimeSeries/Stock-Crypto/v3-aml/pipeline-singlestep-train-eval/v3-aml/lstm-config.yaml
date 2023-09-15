@@ -1,0 +1,327 @@
+models:
+# Model 1 - LSTM trained on most of the historic data, including wild peaks of 2020-2021, including synthetic. see __generate_synthetic_data.ipynb__ v4
+- 
+  name: "lstm-tb"
+  data: 
+    filename: "synth_market_data_v4.csv"
+    columns: [   
+      Open,Volume,FGI_Class_ef,FGI_Class_f,FGI_Class_n,FGI_Class_g,FGI_Class_eg,FGI_Class_nan,sma5,sma10,sma20,sma50,sma200,ema30,ema50,ema144,bb_upperband,bb_middleband,bb_lowerband,macd,macdsignal,macdhist,rsi,above_sma5,above_sma10,above_sma20,above_sma50,above_sma200,above_ema30,above_ema50,above_ema144,bb_signal_above_h,bb_signal_between,bb_signal_below_l,macd_signal,rsi_signal_b20,rsi_signal_b30,rsi_signal_b40,rsi_signal_b50,rsi_signal_b60,rsi_signal_b70,rsi_signal_b80,rsi_signal_a80
+      ]
+    coins:  [
+      "Synth"
+    ]
+    sequence_length: 20  # history length to feed into prediction
+    train_test_split: 
+      type: "ratio"     # ration / date
+      date: "2021-07-24"
+      date_column : "Date"
+      ratio: 0.80
+    shuffle: false  # Shuffle train/val data 
+    normalise: true
+    normalise_exceptions: [
+      2,3,4,5,6,7,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42
+    ]   # index of the input column NOT to be normalized
+  forecast:
+    tbl_length: 5   # TBL forecast window lenght; must be smaller than sequence_length
+    tbl_percentage: 5   # TBL forecast window size up and down in price %
+    tbl_column: 'Open'  # what data is used to calculate TBL
+  # Model
+  training: 
+    epochs: 256
+    batch_size: 32
+    monitor: 'val_accuracy'    # accuracy / val_accuracy highest metrics model will be saved
+    patience: 5
+    model_save_dir: "saved_models"
+  model:
+    loss: "categorical_crossentropy"
+    optimizer: "adam"
+    layers: 
+      -
+        type: "lstm"
+        neurons: 256
+        input_timesteps: 20   # must be equal to sequence lenght
+        input_dim: 43
+        return_seq: true
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "lstm"
+        neurons: 128
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 64
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 32
+        return_seq: false
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "dense"
+        neurons: 3
+        activation: "softmax"
+# Model 2 - LSTM trained on only recent data - see generate_synthetic_data v5.5
+-
+  name: "lstm-tb-2"
+  data:
+    filename: "synth_market_data_v5_5_train.csv"
+    columns: [
+      Open,Volume,FGI_Class_ef,FGI_Class_f,FGI_Class_n,FGI_Class_g,FGI_Class_nan,FGI_Class_eg,above_sma5,above_sma10,above_sma20,above_sma50,above_sma200,above_ema30,above_ema50,above_ema144,bb_signal_above_h,bb_signal_between,bb_signal_below_l,macd_signal,rsi_signal_b20,rsi_signal_b30,rsi_signal_b40,rsi_signal_b50,rsi_signal_b60,rsi_signal_b70,rsi_signal_b80,rsi_signal_a80
+    ]
+    coins:  [
+      "Synth"
+    ]
+    sequence_length: 20  # history length to feed into prediction
+    train_test_split: 
+      type: "ratio"     # ration / date
+      date: "2021-07-24"
+      date_column : "Date"
+      ratio: 0.80
+    shuffle: false
+    normalise: true
+    normalise_exceptions: [
+      2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
+    ]   # index of the input column NOT to be normalized
+  forecast:
+    tbl_length: 5   # TBL forecast window lenght; must be smaller than sequence_length
+    tbl_percentage: 5   # TBL forecast window size up and down in price %
+    tbl_column: 'Open'  # what data is used to calculate TBL
+  # Model
+  training: 
+    epochs: 256
+    batch_size: 32
+    monitor: 'val_accuracy'    # accuracy / val_accuracy highest metrics model will be saved
+    patience: 30
+    model_save_dir: "saved_models"
+  model:
+    loss: "categorical_crossentropy"
+    optimizer: "adam"
+    layers: 
+      -
+        type: "lstm"
+        neurons: 512
+        input_timesteps: 20   # must be equal to sequence lenght
+        input_dim: 28
+        return_seq: true
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "lstm"
+        neurons: 256
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 128
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 64
+        return_seq: false
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "dense"
+        neurons: 3
+        activation: "softmax"
+# Model 3 - LSTM trained shuffled data [ema7,vol_ema7,fgi*] - see generate_synthetic_data v7
+-
+  name: "lstm-tb-3"
+  data:
+    filename: "processed_market_data_v7.csv"
+    columns: [
+      ema7,vol_ema7,FGI_Class_ef,FGI_Class_f,FGI_Class_n,FGI_Class_g,FGI_Class_eg 
+      ]
+    coins:  [
+      "BTC-USD"
+    ]
+    sequence_length: 30  # history length to feed into prediction
+    train_test_split: 
+      type: "ratio"     # ration / date
+      date: "2021-07-24"
+      date_column : "Date"
+      ratio: 0.70
+    shuffle: true
+    normalise: true
+    normalise_exceptions: [
+      2,3,4,5,6 # FGI signals
+    ]   # index of the input column NOT to be normalized
+  forecast:
+    tbl_length: 14   # TBL forecast window lenght; must be smaller than sequence_length
+    tbl_percentage: 5   # TBL forecast window size up and down in price %
+    tbl_column: 'ema7'  # what data is used to calculate TBL
+  # Model
+  training: 
+    epochs: 256
+    batch_size: 32
+    monitor: 'val_accuracy'    # accuracy / val_accuracy highest metrics model will be saved
+    patience: 50
+    model_save_dir: "saved_models"
+  model:
+    loss: "categorical_crossentropy"
+    optimizer: "adam"
+    layers: 
+      -
+        type: "lstm"
+        neurons: 1024
+        input_timesteps: 30   # must be equal to sequence lenght
+        input_dim: 7
+        return_seq: true
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "lstm"
+        neurons: 512
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 256
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 128
+        return_seq: false
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "dense"
+        neurons: 3
+        activation: "softmax"
+# Model 4 - LSTM trained shuffled data [ema7,vol_ema7,fgi*,macd] - see generate_synthetic_data v7
+-
+  name: "lstm-tb-4"
+  data:
+    filename: "processed_market_data_v7.csv"
+    columns: [
+      ema7,vol_ema7,FGI_Class_ef,FGI_Class_f,FGI_Class_n,FGI_Class_g,FGI_Class_eg,macd_signal
+      ]
+    coins:  [
+      "BTC-USD"
+    ]
+    sequence_length: 30  # history length to feed into prediction
+    train_test_split: 
+      type: "ratio"     # ration / date
+      date: "2021-07-24"
+      date_column : "Date"
+      ratio: 0.70
+    shuffle: true
+    normalise: true
+    normalise_exceptions: [
+      2,3,4,5,6, # FGI signals
+      7 # MACD signal
+    ]   # index of the input column NOT to be normalized
+  forecast:
+    tbl_length: 14   # TBL forecast window lenght; must be smaller than sequence_length
+    tbl_percentage: 5   # TBL forecast window size up and down in price %
+    tbl_column: 'ema7'  # what data is used to calculate TBL
+  # Model
+  training: 
+    epochs: 256
+    batch_size: 32
+    monitor: 'val_accuracy'    # accuracy / val_accuracy highest metrics model will be saved
+    patience: 50
+    model_save_dir: "saved_models"
+  model:
+    loss: "categorical_crossentropy"
+    optimizer: "adam"
+    layers: 
+      -
+        type: "lstm"
+        neurons: 1024
+        input_timesteps: 30   # must be equal to sequence lenght
+        input_dim: 8
+        return_seq: true
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "lstm"
+        neurons: 512
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 256
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 128
+        return_seq: false
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "dense"
+        neurons: 3
+        activation: "softmax"
+# Model 5 - LSTM trained shuffled data [ema7,vol_ema7,*all_signals*] - see generate_synthetic_data v7
+-
+  name: "lstm-tb-5"
+  data:
+    filename: "processed_market_data_v7.csv"
+    columns: [
+      ema7,vol_ema7,FGI_Class_ef,FGI_Class_f,FGI_Class_n,FGI_Class_g,FGI_Class_eg,above_sma5,above_sma10,above_sma20,above_sma50,above_sma200,above_ema30,above_ema50,above_ema144,bb_signal_above_h,bb_signal_between,bb_signal_below_l,macd_signal,rsi_signal_b20,rsi_signal_b30,rsi_signal_b40,rsi_signal_b50,rsi_signal_b60,rsi_signal_b70,rsi_signal_b80,rsi_signal_a80
+      ]
+    coins:  [
+      "BTC-USD"
+    ]
+    sequence_length: 30  # history length to feed into prediction
+    train_test_split: 
+      type: "ratio"     # ration / date
+      date: "2021-07-24"
+      date_column : "Date"
+      ratio: 0.70
+    shuffle: true
+    normalise: true
+    normalise_exceptions: [
+      2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26
+    ]   # index of the input column NOT to be normalized
+  forecast:
+    tbl_length: 14   # TBL forecast window lenght; must be smaller than sequence_length
+    tbl_percentage: 5   # TBL forecast window size up and down in price %
+    tbl_column: 'ema7'  # what data is used to calculate TBL
+  # Model
+  training: 
+    epochs: 256
+    batch_size: 32
+    monitor: 'val_accuracy'    # accuracy / val_accuracy highest metrics model will be saved
+    patience: 50
+    model_save_dir: "saved_models"
+  model:
+    loss: "categorical_crossentropy"
+    optimizer: "adam"
+    layers: 
+      -
+        type: "lstm"
+        neurons: 1024
+        input_timesteps: 30   # must be equal to sequence lenght
+        input_dim: 27
+        return_seq: true
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "lstm"
+        neurons: 512
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 256
+        return_seq: true
+      -
+        type: "lstm"
+        neurons: 128
+        return_seq: false
+      -
+        type: "dropout"
+        rate: 0.2
+      -
+        type: "dense"
+        neurons: 3
+        activation: "softmax"
