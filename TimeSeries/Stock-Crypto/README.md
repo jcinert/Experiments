@@ -38,3 +38,10 @@ I would like to expand the solutioon to use Transformes and also XGBoost / CatBo
 - on AML compute instance run notebook `v3-aml\pipeline-singlestep-train-eval\v3-aml\model-eval.ipynb`
 ### Good to know
 The run cost of v3 on AML is ~ $50 / month if you run jobs daily.
+
+# Coming up next
+In the next version (v4) I'm working on:
+- segregation of train / eval / monitor
+- model registry
+- improved train / validation / test data set handling
+- deploy to AML endpoints for scoring

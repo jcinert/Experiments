@@ -6,3 +6,4 @@ CondaEnv/env/
 BERTopic/*model_v*
 *.pyc
 CommonCoreLearningStandardsAI/transcripts/*
+*.zip
