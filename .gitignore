@@ -1,9 +1,47 @@
-.env
-CondaEnv/env/
+# config files
+/.vscode
+*__pycache__/
+*.pyc
+
+# data files
+#*data/
+*data_backup/
+*metrics/
+price_data*.csv
+*market_data*.csv
+*data*.csv
+*stock*.csv
+!Synthetic-data/
+!forecast.csv
+**/transcripts/*
 *data/
 !test_data/
 *.csv
+
+# ML models
+*.h5
 BERTopic/*model_v*
-*.pyc
-CommonCoreLearningStandardsAI/transcripts/*
+
+# environments
+.env/
+*env/
+.env
+env.env
+CondaEnv/env/
+
+# mlflow runs
+mlruns/
+
+# images
+charts/
+*.png
+
+# Misc
 *.zip
+**/working_files/*
+
+# Azure ML temp files
+.ipynb_aml_checkpoints/ 
+*.amltmp 
+*.amltemp
+*.amlignore
