@@ -6,3 +6,4 @@
 - conda env update --prefix ./env --file environment.yml --update-all 
 - conda env update --prefix ./env --file environment.yml --force-reinstall
 - conda env remove --prefix ./env
+- conda activate ./env
