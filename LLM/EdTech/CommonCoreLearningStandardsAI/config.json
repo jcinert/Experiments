@@ -1,0 +1,7 @@
+{
+    "test_data_file":"C:\\Github_Projects\\Experiments\\LLM\\EdTech\\CommonCoreLearningStandardsAI\\test_data\\sample_inputs.json",
+    "test_output_file":"C:\\Github_Projects\\Experiments\\LLM\\EdTech\\CommonCoreLearningStandardsAI\\test_data\\output.json",
+    "debug":false,
+    "run_single_example":true,
+    "max_retries_on_error":3
+}

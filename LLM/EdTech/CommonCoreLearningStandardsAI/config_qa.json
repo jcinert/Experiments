@@ -1,0 +1,7 @@
+{
+    "data_file":"C:\\Github_Projects\\Experiments\\CommonCoreLearningStandardsAI\\test_data\\output.json",
+    "qa_output_file":"C:\\Github_Projects\\Experiments\\CommonCoreLearningStandardsAI\\test_data\\output_qa.json",
+    "debug":false,
+    "run_single_example":false,
+    "max_retries_on_error":3
+}
