@@ -20,7 +20,7 @@ price_data*.csv
 
 # ML models
 *.h5
-BERTopic/*model_v*
+*/BERTopic/*model_v*
 
 # environments
 .env/
