@@ -16,10 +16,16 @@ dependencies:
   - ipykernel
   - matplotlib
   - openai
-  - langchain
   - python-dotenv
   - contextlib2
   - pip:
     - datetime
     - pyyaml
     - streamlit
+    - chromadb
+    - bs4
+    - langchain
+    - langchain-community
+    - langchainhub
+    - langsmith
+    - tiktoken

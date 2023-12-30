@@ -45,3 +45,6 @@ charts/
 *.amltmp 
 *.amltemp
 *.amlignore
+
+# LLMs
+*/local_models/*
