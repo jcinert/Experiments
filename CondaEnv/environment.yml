@@ -29,3 +29,6 @@ dependencies:
     - langchainhub
     - langsmith
     - tiktoken
+    - lxml
+    - gpt4all
+    - pypdf
