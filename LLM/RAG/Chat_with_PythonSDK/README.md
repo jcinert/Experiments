@@ -1,7 +1,7 @@
 cd C:\Github_Projects\Experiments\CondaEnv
 conda activate ./env
 cd C:\Github_Projects\Experiments\LLM\RAG\Chat_with_PythonSDK
-streamlit run main.stream.py
+streamlit run main-stream.py
 pause
 
 

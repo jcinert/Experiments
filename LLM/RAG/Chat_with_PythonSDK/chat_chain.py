@@ -1,6 +1,7 @@
 import os
 import openai
 import bs4
+import time
 from langchain import hub
 from langchain.chat_models import AzureChatOpenAI
 from langchain.embeddings import AzureOpenAIEmbeddings
@@ -38,6 +39,7 @@ class SDKChat():
     """
     def __init__(self, debug=False):
         self.DEBUG = debug
+        self.chain_ready = False
         self.init()
     
     def init(self):
@@ -46,6 +48,8 @@ class SDKChat():
         """
         # DEBUG
         if self.DEBUG:
+            print('------ INIT -------')
+            print('--- debug mode on')
             langchain.debug = True
 
         # load secrets from env var
@@ -56,12 +60,15 @@ class SDKChat():
         openai.api_base = os.environ['OPENAI_API_BASE']
         openai.api_type= os.environ['OPENAI_API_TYPE']
         openai.api_version = os.environ['OPENAI_API_VERSION']
-        print(f'Openai secrets loaded, models: {os.environ["OPENAI_DEPLOYMENT_ID_LLM"]}, {os.environ["OPENAI_DEPLOYMENT_ID_EMBED"]}')
+        if self.DEBUG:
+            print(f'--- Openai secrets loaded, models: {os.environ["OPENAI_DEPLOYMENT_ID_LLM"]}, {os.environ["OPENAI_DEPLOYMENT_ID_EMBED"]}')
 
     def create_chat(self,callbacks=[]):
         """
             Create chatbot
         """
+        if self.DEBUG:
+            print('------ CREATE CHAT -------')
         # create vector database
         vector_db = VectorDB(debug=self.DEBUG)
         vector_db.create_db_from_url()
@@ -93,6 +100,15 @@ class SDKChat():
         )
 
         self.response_synthesizer_chain = (prompt | self.llm | StrOutputParser())
+        self.chain_ready = True
+        if self.DEBUG:
+            print('--- chat chain created')
+    
+    def chat_ready(self):
+        """
+            Check if chatbot is ready
+        """
+        return self.chain_ready
 
     def invoke(self, input: Dict) -> str:
         """
@@ -102,6 +118,7 @@ class SDKChat():
                 - question: question to be answered
         """
         context = self.context_chain.invoke(input)
+        time.sleep(6)
         answer = self.response_synthesizer_chain.invoke(context)
 
         return answer
@@ -115,7 +132,6 @@ class SDKChat():
             RunnableParallel,
             RunnablePassthrough,
         )
-        import time
 
         def wait(prompt: str) -> str: # wait 1 second
             time.sleep(1)
@@ -132,7 +148,7 @@ class SDKChat():
 
 
 
-    def format_docs(docs: Sequence[Document]) -> str:
+    def format_docs(self, docs: Sequence[Document]) -> str:
         formatted_docs = []
         for i, doc in enumerate(docs):
             doc_string = f"<doc id='{i}'>{doc.page_content}</doc>"
@@ -176,7 +192,7 @@ class SDKChat():
         user.\
         """
 
-        REPHRASE_TEMPLATE = """\
+        self.REPHRASE_TEMPLATE = """\
         Given the following conversation and a follow up question, rephrase the follow up \
         question to be a standalone question.
 
@@ -184,7 +200,7 @@ class SDKChat():
         {chat_history}
         Follow Up Input: {question}
         Standalone Question:"""
-        self.CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(REPHRASE_TEMPLATE)
+        self.CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(self.REPHRASE_TEMPLATE)
 
 
 class VectorDB():
@@ -202,6 +218,9 @@ class VectorDB():
         """
             Initialize variables, loads OpenAI secrets, if not loaded previously
         """
+        if self.DEBUG:
+            print('--- vector db init')
+
         if not openai.api_key:
             # load secrets from env var
             _ = load_dotenv(find_dotenv(),verbose=self.DEBUG) # read local .env file
@@ -211,7 +230,8 @@ class VectorDB():
             openai.api_base = os.environ['OPENAI_API_BASE']
             openai.api_type= os.environ['OPENAI_API_TYPE']
             openai.api_version = os.environ['OPENAI_API_VERSION']
-            print(f'Openai secrets loaded, models: {os.environ["OPENAI_DEPLOYMENT_ID_LLM"]}, {os.environ["OPENAI_DEPLOYMENT_ID_EMBED"]}')
+            if self.DEBUG:
+                print(f'--- Openai secrets loaded, models: {os.environ["OPENAI_DEPLOYMENT_ID_LLM"]}, {os.environ["OPENAI_DEPLOYMENT_ID_EMBED"]}')
     
     def get_retriever(self):
         return self.retriever
@@ -262,7 +282,7 @@ class VectorDB():
 
         return all_splits
 
-    def simple_extractor(html: str) -> str:
+    def simple_extractor(self, html: str) -> str:
         soup = BeautifulSoup(
             html, 
             "lxml",  
