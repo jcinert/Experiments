@@ -24,9 +24,12 @@ from langchain.utils.html import (PREFIXES_TO_IGNORE_REGEX,
                                   SUFFIXES_TO_IGNORE_REGEX)
 import langchain
 import re
+import json
+import datetime
+import uuid
 
 # DEBUG
-DEBUG_FILE_PATH = "C:\\Github_Projects\\Experiments\\LLM\\RAG\\transcripts\\"
+TRANSCRIPT_FILE_PATH = "C:\\Github_Projects\\Experiments\\LLM\\RAG\\Chat_with_PythonSDK\\transcripts\\"
 DEBUG=True
 
 class SDKChat():
@@ -37,8 +40,9 @@ class SDKChat():
             - generates answer using Azure OpenAI 
         Usage: xxx
     """
-    def __init__(self, debug=False):
+    def __init__(self, debug=False, json_logging=False):
         self.DEBUG = debug
+        self.json_logging = json_logging
         self.chain_ready = False
         self.init()
     
@@ -51,6 +55,9 @@ class SDKChat():
             print('------ INIT -------')
             print('--- debug mode on')
             langchain.debug = True
+
+        if self.json_logging:
+            self.message_counter = 0
 
         # load secrets from env var
         _ = load_dotenv(find_dotenv(),verbose=self.DEBUG) # read local .env file
@@ -69,21 +76,28 @@ class SDKChat():
         """
         if self.DEBUG:
             print('------ CREATE CHAT -------')
-        # create vector database
+        # create vector database instance
         vector_db = VectorDB(debug=self.DEBUG)
+        # download IBM Generative AI SDK from web embed into vector database
         vector_db.create_db_from_url()
         retriever = vector_db.get_retriever()
+
+        # crate prompt and Azure OpenAI instance
         self.create_prompts()
         self.llm = AzureChatOpenAI(azure_deployment=os.environ['OPENAI_DEPLOYMENT_ID_LLM'], streaming=streaming, callbacks=callbacks)
 
+        # RAG Langchains
+        # 1. rephrase user question given chat history - to handle retrival
         condense_question_chain = (
             PromptTemplate.from_template(self.REPHRASE_TEMPLATE)
             | self.llm
             | StrOutputParser()
         )
 
+        # 2. Retriever chain - documents from vector database
         retriever_chain = condense_question_chain | retriever
 
+        # 3. Parallel chain - retriever and passthrough of the user question and history
         self.context_chain = RunnableMap(
             {
                 "context": retriever_chain | self.format_docs,
@@ -99,8 +113,19 @@ class SDKChat():
             ]
         )
 
+        # 4. Response synthesizer chain - chain to combine context and question + history
         self.response_synthesizer_chain = (prompt | self.llm | StrOutputParser())
+        
+        # 5. Wait chain - Create chain with wait step to overcome Azure OpenAI S0 tier limit of API call frequency
+        chain_wait = self.create_chain_wait()
+
+        # 6. Overall chain
+        self.answer_chain = self.context_chain | chain_wait | self.response_synthesizer_chain
         self.chain_ready = True
+
+        if self.json_logging:
+            self.chat_id = str(uuid.uuid4())
+
         if self.DEBUG:
             print('--- chat chain created')
     
@@ -117,24 +142,29 @@ class SDKChat():
                 - chat_history: list of messages
                 - question: question to be answered
         """
-        context = self.context_chain.invoke(input)
-        time.sleep(6)
-        answer = self.response_synthesizer_chain.invoke(context)
+        # # two steps RAG
+        # context = self.context_chain.invoke(input)
+        # time.sleep(6) # wait for 6 seconds to avoid Azure OpenAI S0 limit of API call frequency
+        # answer = self.response_synthesizer_chain.invoke(context)
+
+        # one step RAG wit wait chain
+        answer = self.answer_chain.invoke(input)
+
+        if self.json_logging:
+            self.json_log(input['question'], answer)
 
         return answer
 
     def create_chain_wait(self):
         """
-            Workaround - Create chain with wait step to overcome Azure OpenAI limitations
+            Workaround - Create chain with wait step to overcome Azure OpenAI S0 tier API call frequency limitation
         """
         from langchain_core.runnables import (
             RunnableLambda,
-            RunnableParallel,
-            RunnablePassthrough,
         )
 
         def wait(prompt: str) -> str: # wait 1 second
-            time.sleep(1)
+            time.sleep(6)
             return prompt
 
         chain_wait = RunnableLambda(wait) | {
@@ -143,10 +173,7 @@ class SDKChat():
             'chat_history': itemgetter('chat_history'), # Original LLM output
         }
 
-        # # ERROR - this does not work due to the S0 limit of API call frequency
-        self.answer_chain = self.context | chain_wait | self.response_synthesizer_chain
-
-
+        return chain_wait
 
     def format_docs(self, docs: Sequence[Document]) -> str:
         formatted_docs = []
@@ -201,6 +228,39 @@ class SDKChat():
         Follow Up Input: {question}
         Standalone Question:"""
         self.CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(self.REPHRASE_TEMPLATE)
+
+    def json_log(self, prompt: str, answer: str):
+        """
+            Log prompt and answer in json format
+        """
+
+        self.message_counter += 1
+
+        # create json log
+        json_log = {
+            "chat_id": self.chat_id,
+            "message_id": self.message_counter,
+            "prompt": prompt,
+            "answer": answer,
+            "timestamp": datetime.datetime.now().isoformat(),
+        }
+
+        json_file = TRANSCRIPT_FILE_PATH + 'chat_log.json'
+
+        json_chats = []
+
+        # save json - create file if it does not exist
+        if not os.path.isfile(json_file):
+            json_chats.append(json_log)
+            with open(json_file, mode='w') as f:
+                f.write(json.dumps(json_chats, indent=2))
+        else:
+            with open(json_file) as existing_json:
+                existing_chats = json.load(existing_json)
+
+            existing_chats.append(json_log)
+            with open(json_file, mode='w') as f:
+                f.write(json.dumps(existing_chats, indent=2))
 
 
 class VectorDB():

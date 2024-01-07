@@ -14,10 +14,10 @@ def init_chat():
     memory = ConversationBufferMemory(chat_memory=msgs)
 
     # create a chat instance
-    sdk_chat = SDKChat(debug=True)
+    sdk_chat = SDKChat(debug=True,json_logging=True)
     sdk_chat.create_chat()
     return sdk_chat, msgs
-     
+
 sdk_chat, msgs = init_chat()
 
 if len(msgs.messages) == 0:
