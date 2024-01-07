@@ -47,7 +47,7 @@ if prompt := st.chat_input():
     with st.chat_message("assistant"):
         stream_handler = StreamHandler(st.empty())
         if not sdk_chat.chat_ready():
-            sdk_chat.create_chat(callbacks=[stream_handler])
+            sdk_chat.create_chat(streaming=True, callbacks=[stream_handler])
             print("--- chat chain created")
 
         response = sdk_chat.invoke({'chat_history': st.session_state.messages, 'question': prompt})

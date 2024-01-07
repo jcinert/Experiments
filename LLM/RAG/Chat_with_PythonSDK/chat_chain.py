@@ -63,7 +63,7 @@ class SDKChat():
         if self.DEBUG:
             print(f'--- Openai secrets loaded, models: {os.environ["OPENAI_DEPLOYMENT_ID_LLM"]}, {os.environ["OPENAI_DEPLOYMENT_ID_EMBED"]}')
 
-    def create_chat(self,callbacks=[]):
+    def create_chat(self,streaming=False,callbacks=[]):
         """
             Create chatbot
         """
@@ -74,7 +74,7 @@ class SDKChat():
         vector_db.create_db_from_url()
         retriever = vector_db.get_retriever()
         self.create_prompts()
-        self.llm = AzureChatOpenAI(azure_deployment=os.environ['OPENAI_DEPLOYMENT_ID_LLM'], streaming=True, callbacks=callbacks)
+        self.llm = AzureChatOpenAI(azure_deployment=os.environ['OPENAI_DEPLOYMENT_ID_LLM'], streaming=streaming, callbacks=callbacks)
 
         condense_question_chain = (
             PromptTemplate.from_template(self.REPHRASE_TEMPLATE)
