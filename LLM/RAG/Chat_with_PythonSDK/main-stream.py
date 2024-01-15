@@ -5,7 +5,7 @@ import streamlit as st
 # from ssl_workaround import no_ssl_verification
 import os
 import openai
-from chat_chain import SDKChat
+from LLM.RAG.Chat_with_PythonSDK.src.chat_chain import SDKChat
 # from dotenv import load_dotenv, find_dotenv
 
 st.set_page_config(page_title="Chat with IBM Generative AI Python SDK", page_icon="🖖")

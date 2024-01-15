@@ -1,7 +1,7 @@
 import streamlit as st
 from langchain.memory import ConversationBufferMemory
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
-from chat_chain import SDKChat
+from src.chat_chain import SDKChat
 
 st.set_page_config(page_title="Chat with IBM Generative AI Python SDK", page_icon="🖖")
 st.title("🖖 Chat with IBM Generative AI Python SDK")
@@ -14,7 +14,7 @@ def init_chat():
     memory = ConversationBufferMemory(chat_memory=msgs)
 
     # create a chat instance
-    sdk_chat = SDKChat(debug=True,json_logging=True)
+    sdk_chat = SDKChat()
     sdk_chat.create_chat()
     return sdk_chat, msgs
 
@@ -39,3 +39,4 @@ if prompt := st.chat_input():
     # write response to UI and history
     st.chat_message("ai").write(response)
     msgs.add_ai_message(response)
+    print(msgs.messages)
