@@ -1,0 +1,144 @@
+[
+    {
+      "chat_id": 1,
+      "messages":[
+        {
+          "message_id": 1,
+          "prompt": "what are the parameters of class Credentials?"
+        },
+        {
+          "message_id": 2,
+          "prompt": "What are their types?"
+        },
+        {
+          "message_id": 3,
+          "prompt": "Is there an usage example?"
+        },
+        {
+          "message_id": 4,
+          "prompt": "What is api_key expected format?"
+        },
+        {"message_id": 5,
+          "prompt": "Is there an example of usage with Model class?"}
+      ]
+    },
+    {
+      "chat_id": 2,
+      "messages":[
+        {
+          "message_id": 1,
+          "prompt": "What is IBM Generative AI Python SDK used for?"
+        },
+        {
+          "message_id": 2,
+          "prompt": "Does it include examples of how to create an chatbot with streaming?"
+        },
+        {
+          "message_id": 3,
+          "prompt": "Can you provide the example?"
+        },
+        {
+          "message_id": 4,
+          "prompt": "Can you explain the GenerateParams class and all its constructor parameters?"
+        }
+      ]
+    },
+    {
+      "chat_id": 3,
+      "messages":[
+        {
+          "message_id": 1,
+          "prompt": "Is there a hello world example of this SDK usage?"
+        },
+        {
+          "message_id": 2,
+          "prompt": "What LLM model is used in this case?"
+        },
+        {
+          "message_id": 3,
+          "prompt": "How is API key set in this case?"
+        }
+      ]
+    },
+    {
+      "chat_id": 4,
+      "messages":[
+        {
+          "message_id": 1,
+          "prompt": "What are functions of class genai.Model?"
+        },
+        {
+          "message_id": 2,
+          "prompt": "Can this class be used with custom models? if yes, how?"
+        },
+        {
+          "message_id": 3,
+          "prompt": "What models are supported?"
+        }
+      ]
+    },
+    {
+      "chat_id": 5,
+      "messages":[
+        {
+          "message_id": 1,
+          "prompt": "Does this SDK support Langchain LCEL?"
+        }
+      ]
+    },
+    {
+        "chat_id": 6,
+        "messages":[
+          {
+            "message_id": 1,
+            "prompt": "How can you create a prompt from example? what are the options?"
+          },
+          {
+            "message_id": 2,
+            "prompt": "can you create it from URL?"
+          },
+          {
+            "message_id": 3,
+            "prompt": "is there a way to create prompts from csv file in bulk?"
+          }
+        ]
+    },
+    {
+        "chat_id": 7,
+        "messages":[
+          {
+            "message_id": 1,
+            "prompt": "What is usage of Schemas??"
+          },
+          {
+            "message_id": 2,
+            "prompt": "how they can be leveraged by a developer? provide an example"
+          },
+          {
+            "message_id": 3,
+            "prompt": "do you have another one?"
+          }
+        ]
+    },
+    {
+        "chat_id": 8,
+        "messages":[
+            {
+                "message_id": 1,
+                "prompt": "What is IBM Generative AI Python SDK used for?"
+            },
+            {
+                "message_id": 2,
+                "prompt": "Is it better to use Langchain or LlamaIndex? which is better integrated in the SDK?"
+            },
+            {
+                "message_id": 3,
+                "prompt": "Is there a support for pandas? provide a simple example."
+            },
+            {
+                "message_id": 4,
+                "prompt": "Can you define a custom prompt template?"
+            }
+        ]
+    }
+]

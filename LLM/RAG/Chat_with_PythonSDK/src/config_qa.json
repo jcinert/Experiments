@@ -1,0 +1,8 @@
+{
+    "data_file":"C:\\Github_Projects\\Experiments\\LLM\\RAG\\Chat_with_PythonSDK\\evaluate\\questions_batch.json",
+    "qa_output_file":"C:\\Github_Projects\\Experiments\\LLM\\RAG\\Chat_with_PythonSDK\\evaluate\\output_qa.json",
+    "debug":true,
+    "qa_debug_file_path":"C:\\Github_Projects\\Experiments\\LLM\\RAG\\Chat_with_PythonSDK\\evaluate\\transcripts_debug\\output_qa_debug.json",
+    "run_single_example":true,
+    "max_retries_on_error":3
+}
