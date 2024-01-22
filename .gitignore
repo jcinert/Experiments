@@ -17,6 +17,7 @@ price_data*.csv
 *data/
 !test_data/
 *.csv
+*vector_db/
 
 # ML models
 *.h5
@@ -48,3 +49,6 @@ charts/
 
 # LLMs
 */local_models/*
+
+# Logs
+output_qa_debug.json

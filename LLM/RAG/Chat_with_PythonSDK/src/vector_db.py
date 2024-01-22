@@ -3,7 +3,7 @@ import openai
 from langchain.embeddings import AzureOpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
-# from ssl_workaround import no_ssl_verification
+from src.ssl_workaround import no_ssl_verification
 from dotenv import load_dotenv, find_dotenv
 from bs4 import BeautifulSoup, SoupStrainer
 from langchain.document_loaders import RecursiveUrlLoader
@@ -20,7 +20,7 @@ class VectorDB():
         Class represeting vector database
             - fetches documents from IBM Generative AI SDK: https://ibm.github.io/ibm-generative-ai/index.html
             - generates embeddings using Azure OpenAI 
-        Usage: 1. init, 2. create_db_from_url, 3. get_retriever
+        Usage: 1. init, 2. create_db_from_url OR 2. create_db_from_file (if downloaded previously), 3. get_retriever
     """
     def __init__(self):
         self.CONFIG = self.get_config(CONFIG_FILE)
@@ -71,15 +71,36 @@ class VectorDB():
         # create vector database
         self.create_vector_db(processed_docs)
 
-    def create_vector_db(self, processed_docs):
+    def create_db_from_file(self):
+        """
+            Create vector database file - see config for path
+        """
         # create embeddings for all documents
-        embedding=AzureOpenAIEmbeddings(azure_deployment=os.environ['OPENAI_DEPLOYMENT_ID_EMBED'])
-        # create vector database and loads embedded documents
-        self.vectorstore = Chroma.from_documents(documents=processed_docs, embedding=embedding)
+        embedding=AzureOpenAIEmbeddings(azure_deployment=os.environ['OPENAI_DEPLOYMENT_ID_EMBED'],
+                                        max_retries=10)
+        # load vectorstore from file
+        self.vectorstore = Chroma(
+            persist_directory=self.CONFIG['vector_db_path'], 
+            embedding_function=embedding)
+        if self.CONFIG['debug']:
+            print(f'>>> Vectorstore loaded from path: {self.CONFIG["vector_db_path"]}')
+
         self.retriever = self.vectorstore.as_retriever(
             search_type=self.CONFIG['retriever_search_type'], 
             search_kwargs={"k": self.CONFIG['retriever_num_docs']})
-        # TODO: save vectorstore to file
+
+    def create_vector_db(self, processed_docs):
+        # create embeddings for all documents
+        embedding=AzureOpenAIEmbeddings(azure_deployment=os.environ['OPENAI_DEPLOYMENT_ID_EMBED'],max_retries=10,show_progress_bar=True)
+        # create vector database and loads embedded documents
+        with no_ssl_verification():
+            self.vectorstore = Chroma.from_documents(documents=processed_docs, 
+                                                     embedding=embedding, 
+                                                     persist_directory=self.CONFIG['vector_db_path'])
+        
+        self.retriever = self.vectorstore.as_retriever(
+            search_type=self.CONFIG['retriever_search_type'], 
+            search_kwargs={"k": self.CONFIG['retriever_num_docs']})
 
         # if self.CONFIG['debug']:
             # retriever test

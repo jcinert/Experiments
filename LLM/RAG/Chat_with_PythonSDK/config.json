@@ -1,6 +1,7 @@
 {
     "debug": true,
     "json_logging": false,
+    "use_offline_vector_db":true,
     "transcript_file_path": "C:\\Github_Projects\\Experiments\\LLM\\RAG\\Chat_with_PythonSDK\\transcripts\\",
     "max_retries_on_error": 3,
     "retriever_URL_to_get": "https://ibm.github.io/ibm-generative-ai/",
@@ -10,5 +11,6 @@
     "https://ibm.github.io/ibm-generative-ai/py-modindex.html",
     "https://ibm.github.io/ibm-generative-ai/search.html"],
     "retriever_search_type": "mmr",
-    "retriever_num_docs": 4
+    "retriever_num_docs": 4,
+    "vector_db_path":"C:\\Github_Projects\\Experiments\\LLM\\RAG\\Chat_with_PythonSDK\\vector_db"
 }

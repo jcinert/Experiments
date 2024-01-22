@@ -2,6 +2,8 @@ name: Experiments
 channels:
   - defaults
   - conda-forge
+  - pytorch
+  - nvidia
 dependencies:
   - python
   - pandas
@@ -18,6 +20,10 @@ dependencies:
   - openai
   - python-dotenv
   - contextlib2
+  # - pytorch 
+  # - torchvision
+  # - torchaudio
+  # - cpuonly
   - pip:
     - datetime
     - pyyaml
@@ -31,4 +37,7 @@ dependencies:
     - tiktoken
     - lxml
     - gpt4all
+    # - vllm
     - pypdf
+    # - ray
+    # - ochat

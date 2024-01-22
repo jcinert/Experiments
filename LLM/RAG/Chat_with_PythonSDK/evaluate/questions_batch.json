@@ -4,7 +4,7 @@
       "messages":[
         {
           "message_id": 1,
-          "prompt": "what are the parameters of class Credentials?"
+          "prompt": "What are the parameters of class Credentials?"
         },
         {
           "message_id": 2,

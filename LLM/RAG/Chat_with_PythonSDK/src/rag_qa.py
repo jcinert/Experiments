@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv, find_dotenv
 import openai
 
-# # to disable SSL verification that causes problem from my laptop
-# from ssl_workaround import no_ssl_verification
+# to disable SSL verification that causes problem from my laptop
+from src.ssl_workaround import no_ssl_verification
 
 # LangChain imports
 from langchain.chat_models import AzureChatOpenAI
@@ -49,7 +49,7 @@ class RAG_QA():
         self.DEBUG_FILE_PATH = config['qa_debug_file_path']
         self.init()
         # self.load_prompt_examples()
-        # self.initLangChain()
+        self.initLangChain()
     
     def init(self):
         """
@@ -69,7 +69,7 @@ class RAG_QA():
         openai.api_base = os.environ['OPENAI_API_BASE']
         openai.api_type= os.environ['OPENAI_API_TYPE']
         openai.api_version = os.environ['OPENAI_API_VERSION']
-        if self.CONFIG['debug']:
+        if self.DEBUG:
             print(f'Openai secrets loaded, models: {os.environ["OPENAI_DEPLOYMENT_ID_LLM"]}, {os.environ["OPENAI_DEPLOYMENT_ID_EMBED"]}')
     
     # def load_prompt_examples(self):
@@ -162,83 +162,51 @@ class RAG_QA():
 
         """
 
-        # with no_ssl_verification():
-        qa_json = self.qa_chain({"chat_history":chat_history,
-                                "prompt":question,
-                                "response":response,
-                                "fmt_instr_qa":self.format_instruction_qa})
-                                # "QA_EXAMPLE_01":self.QA_EXAMPLE_01,
-                                # "QA_EXAMPLE_02":self.QA_EXAMPLE_02})
+        with no_ssl_verification():
+            qa_json = self.qa_chain({"chat_history":chat_history,
+                                    "prompt":question,
+                                    "response":response,
+                                    "fmt_instr_qa":self.format_instruction_qa})
+                                    # "QA_EXAMPLE_01":self.QA_EXAMPLE_01,
+                                    # "QA_EXAMPLE_02":self.QA_EXAMPLE_02})
         
-        if self.DEBUG:
-            now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-
-            file_name = f"{DEBUG_FILE_PATH}QA_{question[:5]}_{now}.json"
-            with open(file_name, "w") as file:
-                json.dump(qa_json, file)
-
-
         # # parse the response - TODO error handling
         qa_result = self.format_output(qa_json)
+
+        if self.DEBUG:
+            self.json_log(question,response,qa_result['resp_qa_passed'],qa_result['resp_qa_reason'])
+
         return qa_result
+    
+    def json_log(self, prompt: str, answer: str, resp_qa_passed: str, resp_qa_reason: str):
+        """
+            Log prompt, answer and qa result in json format
+        """
 
-    # def batch_qa_assessment(self,assessment_batch:list,max_retries_on_error=3):
-    #     """
-    #         Generates evaluations (QA) summary of the multiple assessment of Common Core State Standard. 
-    #         Parameters:
-    #             assessment: list of dict with below fields
-    #                 standard: str, e.g. "CCSS.ELA-LITERACY.W.4.9"
-    #                 topic: str
-    #                 context: str
-    #                 frq - free response question: str
-    #                 rubric: str
-    #             max_retries_on_error
-    #         Returns:
-    #             qa_results: dict with below fileds:
-    #                 count_assessments - total count of assessements evaluated
-    #                 overall_qa_passed - count of assessments with all evaluation passed - context, frq, rubrics
-    #                 context_qa_passed - count of assessments with context QA passed
-    #                 frq_qa_passed - count of assessments with FRQ QA passed
-    #                 rubric_qa_passed - count of assessments with rubric QA passed
-    #     """
-        
-    #     # init
-    #     count_assessments = len(assessment_batch)
-    #     overall_qa_passed = 0
-    #     context_qa_passed = 0
-    #     frq_qa_passed = 0
-    #     rubric_qa_passed = 0
+        # create json log
+        json_log = {
+            "timestamp": datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
+            "prompt": prompt,
+            "answer": answer,
+            "resp_qa_passed": resp_qa_passed,
+            "resp_qa_reason": resp_qa_reason,
+        }
 
-    #     for assessment in assessment_batch:
-    #         # sometimes parser fails - workaround for now: retry - TODO improve prompts
-    #         run_successfull = False
-    #         for i in range(max_retries_on_error):
-    #             try:
-    #                 qa_result = self.qa_assessment(assessment)
-    #                 run_successfull = True
-    #                 break
-    #             except:
-    #                 print(">>> Assessment QA failed - restarting")
+        json_file = self.DEBUG_FILE_PATH
+        json_chats = []
 
-    #         if not run_successfull:
-    #             raise Exception(f"ERROR: Generate QA not successfull after {max_retries_on_error} retries.")
+        # save json - create file if it does not exist
+        if not os.path.isfile(json_file):
+            json_chats.append(json_log)
+            with open(json_file, mode='w') as f:
+                f.write(json.dumps(json_chats, indent=2))
+        else:
+            with open(json_file) as existing_json:
+                existing_chats = json.load(existing_json)
 
-    #         # adding up qa results for each assessment
-    #         if qa_result['overall_qa_passed'] == True or qa_result['overall_qa_passed'] == 'true':
-    #             overall_qa_passed = overall_qa_passed + 1
-    #         if qa_result['context_qa_passed'] == True or qa_result['context_qa_passed'] == 'true':
-    #             context_qa_passed = context_qa_passed + 1
-    #         if qa_result['frq_qa_passed'] == True or qa_result['frq_qa_passed'] == 'true':
-    #             frq_qa_passed = frq_qa_passed + 1
-    #         if qa_result['rubric_qa_passed'] == True or qa_result['rubric_qa_passed'] == 'true':
-    #             rubric_qa_passed = rubric_qa_passed + 1
-
-    #     return {"count_assessments":count_assessments,
-    #             "overall_qa_passed":overall_qa_passed,
-    #             "context_qa_passed":context_qa_passed,
-    #             "frq_qa_passed":frq_qa_passed,
-    #             "rubric_qa_passed":rubric_qa_passed}
-
+            existing_chats.append(json_log)
+            with open(json_file, mode='w') as f:
+                f.write(json.dumps(existing_chats, indent=2))
 
     def format_output(self,qa_json:dict):
         """
