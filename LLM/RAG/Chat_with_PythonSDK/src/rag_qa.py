@@ -19,11 +19,7 @@ from langchain.prompts.chat import (
     AIMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
-from langchain.schema import (
-    AIMessage,
-    HumanMessage,
-    SystemMessage
-)
+
 # formatters
 from langchain.output_parsers import ResponseSchema
 from langchain.output_parsers import StructuredOutputParser
