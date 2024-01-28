@@ -6,7 +6,7 @@ There is a batch QA (evaluation) - see below How to run Batch QA.
 This is a draft solution, by no means reacy for production.
 
 # How it works
-![alt text](https://github.com/jcinert/Experiments/tree/main/LLM/RAG/Chat_with_PythonSDK/architecture2.png "Chat architecture")
+![alt text](https://github.com/jcinert/Experiments/tree/main/LLM/RAG/Chat_with_PythonSDK/docs/architecture2.png "Chat architecture")
 
 # Modifications possible
 - You can replace the knowledge base (RAG) with __another web site__ - see `config.json`
