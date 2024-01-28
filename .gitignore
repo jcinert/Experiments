@@ -36,6 +36,7 @@ mlruns/
 # images
 charts/
 *.png
+!architecture*.png
 
 # Misc
 *.zip
