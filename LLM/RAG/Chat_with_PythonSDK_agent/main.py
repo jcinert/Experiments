@@ -7,6 +7,22 @@ import openai, os
 from langchain.chat_models import  AzureChatOpenAI
 from dotenv import load_dotenv, find_dotenv
 
+import os
+import openai
+import bs4
+from langchain import hub
+from langchain.chat_models import  AzureChatOpenAI
+from langchain.document_loaders import WebBaseLoader
+from langchain.embeddings import AzureOpenAIEmbeddings
+from langchain.schema import StrOutputParser
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Chroma
+# from langchain_core.runnables import RunnablePassthrough
+from langchain.schema.runnable  import RunnablePassthrough
+from ssl_workaround import no_ssl_verification
+from dotenv import load_dotenv, find_dotenv
+from src.vector_db import VectorDB
+
 # ------ INIT ------
 st.set_page_config(page_title="Chat with IBM Generative AI Python SDK", page_icon="🖖")
 st.title("🖖 Chat with IBM Generative AI Python SDK")
@@ -24,23 +40,34 @@ def init():
     msgs = StreamlitChatMessageHistory(key="langchain_messages")
     memory = ConversationBufferMemory(chat_memory=msgs)
 
-    # create a chat instance
-    # TODO 
-    return msgs
+    # load vector DB
+    vector_db = VectorDB()
+    vector_db.create_db_from_file()
+    retriever = vector_db.get_retriever()
+    # retriever test
+    retrieved_docs = retriever.get_relevant_documents(
+        "What are parameters of class Credentials?"
+    )
+    print(f'---Number of documents retrieved: {len(retrieved_docs)}')
+    print(f'---Doc 0 length: {len(retrieved_docs[0].page_content)}')
+    print(f'---Doc 0: {retrieved_docs[0].page_content}')
+    print(f'---Doc 1 length: {len(retrieved_docs[1].page_content)}')
+    print(f'---Doc 1: {retrieved_docs[1].page_content}')
 
-msgs = init()
+    # create a chat instance
+    llm = AzureChatOpenAI(azure_deployment=os.environ['OPENAI_DEPLOYMENT_ID_LLM'],
+                        temperature=0, 
+                        streaming=True)
+    tools = load_tools(["ddg-search"])
+    agent = initialize_agent(
+        tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, handle_parsing_errors=True
+    )
+    return agent, msgs
+
+agent, msgs = init()
 
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How can I help you?")
-
-# ------ GEN AI ------
-llm = AzureChatOpenAI(azure_deployment=os.environ['OPENAI_DEPLOYMENT_ID_LLM'],
-                      temperature=0, 
-                      streaming=True)
-tools = load_tools(["ddg-search"])
-agent = initialize_agent(
-    tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, handle_parsing_errors=True
-)
 
 # ------ RENDER MESSAGES ------
 for msg in msgs.messages:
