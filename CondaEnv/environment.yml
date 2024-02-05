@@ -33,6 +33,7 @@ dependencies:
     - bs4
     - langchain
     - langchain-community
+    - langchain-openai
     - langchainhub
     - langsmith
     - tiktoken
