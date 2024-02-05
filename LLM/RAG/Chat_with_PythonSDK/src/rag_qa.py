@@ -6,7 +6,7 @@ import openai
 from src.ssl_workaround import no_ssl_verification
 
 # LangChain imports
-from langchain.chat_models import AzureChatOpenAI
+from langchain_community.chat_models import AzureChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import (LLMChain, SequentialChain)
 

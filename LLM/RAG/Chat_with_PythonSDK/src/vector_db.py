@@ -1,6 +1,6 @@
 import os
 import openai
-from langchain.embeddings import AzureOpenAIEmbeddings
+from langchain_community.embeddings import AzureOpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
 from src.ssl_workaround import no_ssl_verification
