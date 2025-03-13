@@ -1,18 +1,26 @@
-
+import logging
 from CCSS_Assessment_Generator import AssessmentGenerator
 from CCSS_AIStudent import AIStudent
 from CCSS_AITeacher import AITeacher
 
-CONFIG_FILE = "C:\\Github_Projects\\Experiments\\LLM\\EdTech\\CommonCoreLearningStandardsAI\\config.json"
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('assessment.log')
+    ]
+)
+logger = logging.getLogger(__name__)
 
 def main():
-
     config = get_config(CONFIG_FILE)
     input_data = read_sample_inputs(config)
 
     for assessment in input_data:
-        print('─' * 100)
-        print(f">>> NEW assessment: Standard: {assessment['standard']} Topic: {assessment['topic']}")
+        logger.info('─' * 100)
+        logger.info(f">>> NEW assessment: Standard: {assessment['standard']} Topic: {assessment['topic']}")
         # Generate assessment
         generator = AssessmentGenerator(debug=config['debug'])
         context, frq, rubric = generate_assessment(config = config,
@@ -52,23 +60,25 @@ def generate_assessment(config:dict, generator: AssessmentGenerator, standard:st
     
     for i in range(config['max_retries_on_error']):
         try:
-            print('─' * 50)
-            print(">>> Assessment generation start")
+            logger.info('─' * 50)
+            logger.info(">>> Assessment generation start")
             context, frq, rubric = generator.generate_assessment()
-            print(f"Context: {context}")
-            print('─' * 50)
-            print(f"Free responce question: {frq}")
-            print('─' * 50)
-            print(f"Rubrics: {rubric}") 
-            print(">>> Assessment generation complete")
-            print('─' * 50)
+            logger.info(f"Context: {context}")
+            logger.info('─' * 50)
+            logger.info(f"Free responce question: {frq}")
+            logger.info('─' * 50)
+            logger.info(f"Rubrics: {rubric}") 
+            logger.info(">>> Assessment generation complete")
+            logger.info('─' * 50)
             run_successfull = True
             break
-        except:
-            print(">>> Assessment generation failed - restarting")
+        except Exception as e:
+            logger.error(f">>> Assessment generation failed - restarting: {str(e)}")
 
     if not run_successfull:
-        raise Exception(f"ERROR: Generate assessment not successfull after {config['max_retries_on_error']} retries.")
+        error_msg = f"ERROR: Generate assessment not successfull after {config['max_retries_on_error']} retries."
+        logger.error(error_msg)
+        raise Exception(error_msg)
 
     return context, frq, rubric             
 
@@ -79,19 +89,21 @@ def answer_assessment(config:dict, student: AIStudent, standard, context, frq, r
 
     for i in range(config['max_retries_on_error']):
         try:
-            print('─' * 50)
-            print(">>> Assessment answering start")
+            logger.info('─' * 50)
+            logger.info(">>> Assessment answering start")
             answer = student.generate_answer(context,frq,rubric)
-            print(f"Answer: {answer}")
-            print(">>> Assessment answering complete") 
-            print('─' * 50)
+            logger.info(f"Answer: {answer}")
+            logger.info(">>> Assessment answering complete") 
+            logger.info('─' * 50)
             run_successfull = True
             break
-        except:
-            print(">>> Assessment answering failed - restarting")
+        except Exception as e:
+            logger.error(f">>> Assessment answering failed - restarting: {str(e)}")
 
     if not run_successfull:
-        raise Exception(f"ERROR: Generate answer not successfull after {config['max_retries_on_error']} retries.")
+        error_msg = f"ERROR: Generate answer not successfull after {config['max_retries_on_error']} retries."
+        logger.error(error_msg)
+        raise Exception(error_msg)
 
     return answer
 
@@ -100,20 +112,22 @@ def evaluate_assessment(config:dict, teacher: AITeacher, standard, context, frq,
 
     for i in range(config['max_retries_on_error']):
         try:
-            print('─' * 50)
-            print(">>> Assessment evaluation start")
+            logger.info('─' * 50)
+            logger.info(">>> Assessment evaluation start")
             written_eval, score, score_max = teacher.evaluate_answer(standard,context,frq,rubric,answer)
-            print(f"Score: {score} (out of {score_max})")
-            print(f"Evaluation: {written_eval}")
-            print(">>> Assessment evaluation complete") 
-            print('─' * 50)
+            logger.info(f"Score: {score} (out of {score_max})")
+            logger.info(f"Evaluation: {written_eval}")
+            logger.info(">>> Assessment evaluation complete") 
+            logger.info('─' * 50)
             run_successfull = True
             break
-        except:
-            print(">>> Assessment evaluation failed - restarting")
+        except Exception as e:
+            logger.error(f">>> Assessment evaluation failed - restarting: {str(e)}")
 
     if not run_successfull:
-        raise Exception(f"ERROR: Generate evaluation not successfull after {config['max_retries_on_error']} retries.")
+        error_msg = f"ERROR: Generate evaluation not successfull after {config['max_retries_on_error']} retries."
+        logger.error(error_msg)
+        raise Exception(error_msg)
 
     return written_eval, score, score_max 
 
@@ -163,7 +177,7 @@ def get_config(CONFIG_FILE):
     """
     import json
         
-    f = open(CONFIG_FILE)
+    f = open('./config.json')
     config = json.load(f)
         
     f.close()
