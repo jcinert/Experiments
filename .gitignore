@@ -42,6 +42,7 @@ charts/
 # Misc
 *.zip
 **/working_files/*
+**/Assesments/*
 
 # Azure ML temp files
 .ipynb_aml_checkpoints/ 
