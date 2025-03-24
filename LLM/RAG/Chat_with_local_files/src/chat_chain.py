@@ -102,12 +102,11 @@ class SDKChat():
         # create vector database instance
         if self.CONFIG.get('vector_db', {}).get('use_offline_vector_db', False):
             vector_db.load_db_from_file()
-        elif self.CONFIG.get('vector_db', {}).get('context_source') == 'url':
-            vector_db.create_db_from_url()
         elif self.CONFIG.get('vector_db', {}).get('context_source') == 'file':
+            print(f'Creating vector DB. This might take a minute...')
             vector_db.create_db_from_local()
         else:
-            raise ValueError(f"Unsupported context_source value: {self.CONFIG.get('vector_db', {}).get('context_source')}. Use one of [url,file]")
+            raise ValueError(f"Unsupported context_source value: {self.CONFIG.get('vector_db', {}).get('context_source')}.")
         retriever = vector_db.get_retriever()
 
         # create prompt and Gemini instance

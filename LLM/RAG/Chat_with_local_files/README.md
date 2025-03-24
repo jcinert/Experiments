@@ -7,10 +7,9 @@ This is a RAG chat powered by Google Gemini LLMs (Google Gemini 2.0 Flash and Go
 
 # How it works
 ## Architecture
-![alt text](https://github.com/jcinert/Experiments/blob/main/LLM/RAG/Chat_with_local_files/docs/architecture2.png "Chat architecture")
+![RAG Chat Architecture](https://github.com/jcinert/Experiments/blob/main/LLM/RAG/Chat_with_local_files/img/architecture2.png "Chat architecture")
 
 ## RAG System Flow
-
 ### 1. Initialization
 - Load config & API keys
 - Check vector DB setting:
@@ -64,7 +63,7 @@ Key configuration is done in `config.json` in root project folder. Configuration
 | Setting | Type | Default | Options | Description |
 |---------|------|---------|---------|-------------|
 | `use_offline_vector_db` | boolean | `true` | `true`/`false` | Whether to load existing vector DB (`true`) or create new one (`false`) |
-| `context_source` | string | `"file"` | `"file"`/`"url"` | Source of documents - local files or web URL |
+| `context_source` | string | `"file"` | `"file"` | Source of documents - only local files supported for now. |
 | `vector_db_path` | string | `"vector_db"` | any valid path | Directory path for storing vector database |
 | `retriever_search_type` | string | `"similarity"` | `"similarity"`/`"mmr"` | Search algorithm for retrieving documents |
 | `retriever_num_docs` | integer | `4` | 1+ | Number of documents to retrieve per query |
@@ -73,7 +72,7 @@ Key configuration is done in `config.json` in root project folder. Configuration
 
 | Setting | Type | Default | Options | Description |
 |---------|------|---------|---------|-------------|
-| `local_docs_path` | string | `"data"` | any valid folder | Directory containing documents to process |
+| `local_docs_path` | string | `"context_files"` | any valid folder | Directory containing documents that should be used in RAG |
 | `file_types` | array | `["html", "md"]` | `"html"`, `"md"`, `"markdown"`, `"txt"`, `"pdf"` | Supported file types for processing |
 | `chunk_size` | integer | `1000` | 100+ | Size of text chunks for processing (in characters) |
 | `chunk_overlap` | integer | `100` | 10+ | Overlap between chunks to maintain context |

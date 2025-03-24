@@ -99,7 +99,9 @@ Answer:
 
 References:
 [1] Title (link) 
+
 [2] Title (link)
+
 etc.
 
 Remember to:
@@ -107,5 +109,5 @@ Remember to:
 2. Include ALL references you used
 3. Make sure citations are in order of appearance
 4. Make links clickable using markdown format
-5. Make sure each reference starts on new line
+5. Make sure each reference starts on new line. Leave blank line between references for better readability.
 6. After providing all references, make sure there are no duplicates. If there are duplicates in the references, merge and update the citation numbers in the answer."""

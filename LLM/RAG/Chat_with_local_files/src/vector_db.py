@@ -8,9 +8,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from dotenv import load_dotenv, find_dotenv
 from bs4 import BeautifulSoup, SoupStrainer
-from langchain_community.document_loaders import RecursiveUrlLoader
-from langchain.utils.html import (PREFIXES_TO_IGNORE_REGEX,
-                                  SUFFIXES_TO_IGNORE_REGEX)
 import re
 import json
 from pathlib import Path
@@ -19,13 +16,10 @@ from langchain_community.document_loaders import BSHTMLLoader
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
 from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders import PyPDFLoader
-import glob
-from typing import Dict, List, Type, Optional
 import datetime
-from urllib.parse import urljoin
 
 # Get project root directory
-PROJECT_ROOT = Path(__file__).parent.parent  # from src/vector_db.py to v1/
+PROJECT_ROOT = Path(__file__).parent.parent
 CONFIG_FILE = PROJECT_ROOT / "config.json"
 
 class VectorDB():
@@ -33,7 +27,7 @@ class VectorDB():
         Class represeting vector database
             - fetches documents from local files or a webpage
             - generates embeddings using Google Gemini embedding model 
-        Usage: 1. init, 2. create_db_from_url/create_db_from_local_html OR 2. load_db_from_file (if downloaded previously), 3. get_retriever
+        Usage: 1. init, 2. create_db_from_local_html OR 2. load_db_from_file (if processed previously), 3. get_retriever
     """
     # Define supported loader mappings
     LOADER_MAPPING = {
@@ -63,9 +57,6 @@ class VectorDB():
         # load secrets from env var if not already loaded
         _ = load_dotenv(find_dotenv(), verbose=self.DEBUG)
         
-        # # Initialize Gemini if not already configured
-        # if not genai._configured:
-        #     genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
         if self.DEBUG:
             print('Gemini secrets loaded for embeddings')
 
@@ -111,17 +102,6 @@ class VectorDB():
 
     def get_retriever(self):
         return self.retriever
-    
-    def create_db_from_url(self):
-        """
-            Create vector database from a URL e.g. https://spark.apache.org/docs/latest/api/python/reference/index.html
-        """
-        # load documents from IBM Generative AI SDK
-        raw_docs = self.get_documents_from_url()
-        # preprocess documents
-        processed_docs = self.preprocess_documents(raw_docs)
-        # create vector database
-        self.create_vector_db(processed_docs)
 
     def load_db_from_file(self):
         """
@@ -169,39 +149,6 @@ class VectorDB():
             parse_only = SoupStrainer( 
             'article', role = 'main'))
         return re.sub(r"\n\n+", "\n\n", soup.text).strip()
-
-    def get_documents_from_url(self):
-        """
-            Get documents from URL
-        """
-        # load documents from IBM Generative AI SDK
-        api_ref = RecursiveUrlLoader(
-            self.CONFIG.get('document_downloading', {}).get('retriever_URL_to_get'),
-            max_depth=self.CONFIG.get('document_downloading', {}).get('retriever_URL_scrape_depth', 4),
-            extractor=self.simple_extractor,
-            prevent_outside=True,
-            use_async=False,
-            timeout=600,
-            check_response_status=True,
-            exclude_dirs=(
-                self.CONFIG.get('document_downloading', {}).get('retriever_URL_to_exclude', [])
-            ),
-            # drop trailing / to avoid duplicate pages.
-            link_regex=(
-                f"href=[\"']{PREFIXES_TO_IGNORE_REGEX}((?:{SUFFIXES_TO_IGNORE_REGEX}.)*?)"
-                r"(?:[\#'\"]|\/[\#'\"])"
-            ),
-        ).load()
-
-        if self.DEBUG:
-            # test doc loading
-            print('Document loading from URL')
-            print(f'Nuber of docs loaded: {len(api_ref)}')
-            print(f"excluded: {self.CONFIG.get('document_downloading', {}).get('retriever_URL_to_exclude', [])}")
-            # print(f'First doc lenght: {len(api_ref[0].page_content)}')
-            # print(f'Sample: {api_ref[1].page_content[:500]}')
-
-        return api_ref
 
     def create_db_from_local(self, directory_path=None):
         """
@@ -335,16 +282,7 @@ class VectorDB():
                 
                 # Create document
                 doc = Document(
-                    page_content=text,
-                    # metadata={
-                    #     'source': str(file_path),
-                    #     'relative_path': str(file_path.relative_to(base_path)),
-                    #     'file_name': file_path.name,
-                    #     'file_type': file_type,
-                    #     'title': self._extract_title(doc, file_path),
-                    #     'last_modified': datetime.datetime.fromtimestamp(file_path.stat().st_mtime).isoformat(),
-                    #     'size': file_path.stat().st_size
-                    # }
+                    page_content=text
                 )
                 docs = [doc]
                 
