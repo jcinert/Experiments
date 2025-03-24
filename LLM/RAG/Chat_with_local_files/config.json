@@ -1,0 +1,26 @@
+{
+    "debug": false,
+    "json_logging": false,
+    "transcript_file_path": "transcripts",
+    "vector_db": {
+        "use_offline_vector_db": true,
+        "context_source": "file",
+        "vector_db_path": "vector_db",
+        "retriever_search_type": "similarity",
+        "retriever_num_docs": 4
+    },
+    "document_loading": {
+        "local_docs_path": "data",
+        "file_types": ["html", "md"],
+        "chunk_size": 1000,
+        "chunk_overlap": 100,
+        "use_multithreading": true,
+        "use_file_urls": true,
+        "preserve_metadata": true
+    },
+    "document_downloading": {
+        "retriever_URL_to_get" : "set your url, e.g.: https://spark.apache.org/docs/latest/api/python/reference/index.html",
+        "retriever_URL_to_exclude": ["url to ignore 1", "url to ignore 2"],
+        "retriever_URL_scrape_depth": 8 
+    }
+}

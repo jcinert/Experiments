@@ -1,0 +1,11 @@
+{
+    "debug": false,
+    "run_single_example": false,
+    "use_offline_vector_db": true,
+    "vector_db_path": "vector_db",
+    "data_file": "evaluate/questions_batch.json",
+    "qa_output_file": "evaluate/output_qa.json",
+    "qa_debug_file_path": "evaluate/transcripts_qa/output_qa_transcript.json",
+    "max_retries_on_error": 3,
+    "retry_wait_seconds": 60
+}

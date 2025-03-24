@@ -1,0 +1,148 @@
+[
+    {
+        "chat_id": 1,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "What is Kafka?"
+            },
+            {
+              "message_id": 2,
+              "prompt": "What it can be used for?"
+          }
+        ]
+    },
+    {
+        "chat_id": 2,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "What is Kafka Connect?"
+            }
+        ]
+    },
+    {
+      "chat_id": 3,
+      "messages": [
+          {
+              "message_id": 1,
+              "prompt": "Can Kafka be deployed on bare-metal hardware, virtual machines?"
+          }
+      ]
+    },
+    {
+        "chat_id": 4,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "For Kafka what are the important configuration options specific to standalone mode?"
+            }
+        ]
+    },
+    {
+        "chat_id": 5,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "Explain how Kafka connectivity to other system works and what are its main features."
+            }
+        ]
+    },
+    {
+        "chat_id": 6,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "Should I use Create React App?"
+            }
+        ]
+    },
+    {
+        "chat_id": 7,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "Are local variables persisted in React between page loadings?"
+            }
+        ]
+    },
+    {
+        "chat_id": 8,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "What Kafka operations require Serdes?"
+            }
+        ]
+    },
+    {
+        "chat_id": 9,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "What will happen if some of my incoming records are in a wrong format or broken?"
+            }
+        ]
+    },
+    {
+        "chat_id": 10,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "Can I interactively query the state of an application using Kafka. Provide example."
+            },
+            {
+                "message_id": 2,
+                "prompt": "How to discover remote application instances and their state stores?"
+            }
+        ]
+    },
+    {
+        "chat_id": 11,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "What is `useFormStatus` Hook used for?"
+            },
+            {
+              "message_id": 2,
+              "prompt": "Provide more elaborate example."
+          }
+        ]
+    },
+    {
+        "chat_id": 12,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "How can I write HTML-like markup inside a JavaScript file? Provide an example."
+            }
+        ]
+    },
+    {
+        "chat_id": 13,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "Provide an example of spark ML logistic regression algorithm."
+            },
+            {
+              "message_id": 2,
+              "prompt": "What other ML algorithms are natively supported?"
+          }
+        ]
+    },
+    {
+        "chat_id": 14,
+        "messages": [
+            {
+                "message_id": 1,
+                "prompt": "How does the Spark aggregate function work? Provide example."
+            },
+            {
+              "message_id": 2,
+              "prompt": "give me short example with sum and filter"
+            }
+        ]
+    }
+]

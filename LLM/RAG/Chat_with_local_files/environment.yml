@@ -1,0 +1,52 @@
+name: ericsson
+
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  # Core Python packages
+  - python=3.10
+  - pip
+  - ipykernel
+  - ipywidgets
+  - nbformat
+
+  # Data processing & visualization
+  - pandas
+  - numpy
+  - plotly
+  - matplotlib
+  - scikit-learn
+
+  # Utility packages
+  - pathlib
+  - tqdm
+  - python-dotenv
+  - contextlib2
+  - zstandard # Langchain dependency
+  - lxml # HTML parsing
+  - pyyaml
+
+  # Vector store
+  - chromadb
+
+  # Pip-installed packages
+  - pip:
+    - datetime
+    - streamlit
+    - bs4
+    # - google-genai # Latest Google GenAI SDK - but has errors with Langchain
+    - langchain
+    - langchain-core
+    - langchain-community # needed for loaders
+    - langchain-google-genai
+    - google-generativeai
+    - "unstructured[all-docs]"
+    - beautifulsoup4
+    - chardet # text encoding detection
+    - typing-extensions # type hints
+    - typing-inspect # type hints
+    - aiohttp # async operations
+    - tiktoken
+    - pypdf

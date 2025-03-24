@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv, find_dotenv
 import openai
+from pathlib import Path
 
 # to disable SSL verification that causes problem from my laptop
 from src.ssl_workaround import no_ssl_verification
@@ -32,6 +33,8 @@ import warnings
 import json
 import datetime
 
+# Get project root directory
+PROJECT_ROOT = Path(__file__).parent.parent  # from src/rag_qa.py to project root
 
 class RAG_QA():
     """
@@ -39,14 +42,40 @@ class RAG_QA():
             - evaluates answer completeness - given the question, history and answer            
             - evaluates answer accuracy/correctness - search the answer in vector db and evaluate match
     """
-    def __init__(self, config:dict):
-        
+    def __init__(self, config: dict):
+        self.project_root = PROJECT_ROOT
+        self.config = self.process_paths(config)
         self.DEBUG = config['debug']
-        self.DEBUG_FILE_PATH = config['qa_debug_file_path']
+        self.DEBUG_FILE_PATH = self.config['qa_debug_file_path']
         self.init()
         # self.load_prompt_examples()
         self.initLangChain()
     
+    def process_paths(self, config):
+        """
+        Convert relative paths in config to absolute paths
+        """
+        # Create a copy of config to modify
+        processed_config = config.copy()
+        
+        # List of paths to process
+        path_keys = [
+            'vector_db_path',
+            'data_file',
+            'qa_output_file',
+            'qa_debug_file_path'
+        ]
+        
+        # Convert each path to absolute
+        for key in path_keys:
+            if key in processed_config:
+                processed_config[key] = str(self.project_root / processed_config[key])
+                
+                # Create parent directories if they don't exist
+                Path(processed_config[key]).parent.mkdir(parents=True, exist_ok=True)
+        
+        return processed_config
+
     def init(self):
         """
             Initialize variables, loads OpenAI secrets
@@ -178,7 +207,6 @@ class RAG_QA():
         """
             Log prompt, answer and qa result in json format
         """
-
         # create json log
         json_log = {
             "timestamp": datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),
@@ -190,6 +218,9 @@ class RAG_QA():
 
         json_file = self.DEBUG_FILE_PATH
         json_chats = []
+
+        # Create parent directory if it doesn't exist
+        Path(json_file).parent.mkdir(parents=True, exist_ok=True)
 
         # save json - create file if it does not exist
         if not os.path.isfile(json_file):
